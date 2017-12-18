@@ -1,3 +1,4 @@
+# Warning: I'm a framework whore and can't choose one atm. Bear with me
 # Junc (Short for Junction)
 ## SSH to servers easily
 ```bash

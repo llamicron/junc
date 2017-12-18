@@ -2,6 +2,8 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
+from .junc import VERSION
+
 here = path.abspath(path.dirname(__file__))
 
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
@@ -9,7 +11,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='junc',
-    version='0.0.3',
+    version=VERSION,
     description='Connect to servers easily',
     long_description=long_description,
     url='https://github.com/llamicron/junc',
@@ -33,10 +35,10 @@ setup(
     # the `py_modules` argument instead as follows, which will expect a file
     # called `my_module.py` to exist:
     #
-    py_modules=["junc"],
+    py_modules=["junc", "storage"],
     #
     # packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=['clint'],
+    install_requires=['docopt'],
     extras_require={
         'dev': ['twine'],
         'test': ['coverage', 'pytest']
