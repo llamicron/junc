@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-from .junc import VERSION
+from junc import VERSION
 
 here = path.abspath(path.dirname(__file__))
 
@@ -52,7 +52,7 @@ setup(
     # executes the function `main` from this package when invoked:
     entry_points={  # Optional
         'console_scripts': [
-            'junc=junc:cli',
+            'junc=junc:main',
         ],
     },
 )

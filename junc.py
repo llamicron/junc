@@ -4,6 +4,7 @@ Usage:
     junc list
     junc add (<name> <username> <ip>) [<location>]
     junc remove <name>
+    junc config <location>
 
 Options:
     -h --help     Show this screen.
@@ -11,9 +12,10 @@ Options:
 
 Notes:
     Data is stored in ~/.junc.json
+    Change location with "junc config /full/path/to/new/file"
 """
 
-VERSION = "0.0.4"
+VERSION = "0.1.1"
 
 import os
 import sys
@@ -54,6 +56,12 @@ def cli(args):
                 print("Couldn't find that server...")
         storage.write(server_list)
 
-if __name__ == '__main__':
+    if args['config']:
+        if storage.set_new_location(args['<location>']):
+            print("New location set")
+def main():
     arguments = docopt(__doc__, version="Junc v" + VERSION)
     cli(arguments)
+
+if __name__ == '__main__':
+    main()
