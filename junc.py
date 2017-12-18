@@ -2,8 +2,8 @@
 Usage:
     junc connect <connect_to>
     junc list
-    junc add [(<name> <username> <ip>) [<location>]]
-    junc remove [<name>]
+    junc add (<name> <username> <ip>) [<location>]
+    junc remove <name>
 
 Options:
     -h --help     Show this screen.
@@ -36,8 +36,13 @@ def cli(args):
         print("Connect to a server")
 
     if args['remove']:
-        print("Remove a server")
-
+        for i in range(len(server_list)):
+            if server_list[i]['name'] == args['<name>']:
+                del server_list[i]
+                break
+            if i == len(server_list) - 1:
+                print("Couldn't find that server...")
+        storage.write(server_list)
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version="Junc v" + VERSION)
