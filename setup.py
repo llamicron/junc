@@ -33,10 +33,10 @@ setup(
     # the `py_modules` argument instead as follows, which will expect a file
     # called `my_module.py` to exist:
     #
-    #   py_modules=["my_module"],
+    py_modules=["junc"],
     #
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=['click'],
+    # packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    install_requires=['clint'],
     extras_require={
         'dev': ['twine'],
         'test': ['coverage', 'pytest']
