@@ -9,5 +9,6 @@
     "env/": true,
     "junc.egg-info/": true,
     "dist/": true,
+    "**/__pycache__": true
   }
 }

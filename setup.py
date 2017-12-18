@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='junc',
-    version='0.0.1',
+    version='0.0.3',
     description='Connect to servers easily',
     long_description=long_description,
     url='https://github.com/llamicron/junc',
@@ -50,7 +50,7 @@ setup(
     # executes the function `main` from this package when invoked:
     entry_points={  # Optional
         'console_scripts': [
-            'junc=junc:main',
+            'junc=junc:cli',
         ],
     },
 )

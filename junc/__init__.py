@@ -1,2 +1,3 @@
-def main():
-    print("It's a piece of junc")
+from .junc import cli
+
+cli()
