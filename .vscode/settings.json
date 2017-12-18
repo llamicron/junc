@@ -1,0 +1,13 @@
+{
+  "python.pythonPath": "${workspaceFolder}/env/bin/python",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "env/": true,
+    "junc.egg-info/": true,
+    "dist/": true,
+  }
+}
