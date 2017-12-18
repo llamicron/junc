@@ -35,7 +35,7 @@ setup(
     # the `py_modules` argument instead as follows, which will expect a file
     # called `my_module.py` to exist:
     #
-    py_modules=["junc", "storage"],
+    py_modules=["junc", "storage", "server"],
     #
     # packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=['docopt'],
