@@ -1,6 +1,6 @@
 """
 Usage:
-    junc connect <connect_to>
+    junc connect <name>
     junc list
     junc add (<name> <username> <ip>) [<location>]
     junc remove <name>
@@ -14,6 +14,9 @@ Notes:
 """
 
 VERSION = "0.0.4"
+
+import os
+import sys
 
 from docopt import docopt
 
@@ -33,7 +36,14 @@ def cli(args):
         storage.write(server_list)
 
     if args['connect']:
-        print("Connect to a server")
+        connection = ""
+        for server in server_list:
+            if server['name'] == args['<name>']:
+                connection = server['username'] + "@" + server['ip']
+        if not connection:
+            print("Couldn't find that server...")
+            sys.exit(1)
+        os.system('ssh ' + connection)
 
     if args['remove']:
         for i in range(len(server_list)):
