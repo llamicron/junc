@@ -1,4 +1,5 @@
 import json
+from shutil import copy2
 import os
 
 from terminaltables import AsciiTable
@@ -36,3 +37,8 @@ class Storage():
         for server in server_list:
             table_data.append([server['name'], server['username'] + "@" + server['ip'], server['location']])
         return AsciiTable(table_data).table
+
+    def backup(self, location=None):
+        if not location:
+            location = self.file_path + '.bak'
+        copy2(self.file_path, location)

@@ -4,6 +4,7 @@ Usage:
     junc list
     junc add (<name> <username> <ip>) [<location>]
     junc remove <name>
+    junc backup [<file>]
 
 Options:
     -h --help     Show this screen.
@@ -11,6 +12,7 @@ Options:
 
 Notes:
     Data is stored in ~/.junc.json
+    Default backup location is ~/.junc.json.bak
 """
 
 VERSION = "0.1.5"
@@ -58,6 +60,10 @@ def cli(args):
             if i == len(server_list) - 1:
                 print("Couldn't find that server...")
         storage.write(server_list)
+
+    if args['backup']:
+        storage.backup(args['<file>'])
+        print("Done.")
 
 def main():
     arguments = docopt(__doc__, version="Junc v" + VERSION)
