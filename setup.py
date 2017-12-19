@@ -28,28 +28,12 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='connect ip ssh pipe raspberry pi rpi raspberry-pi ec2 server',
-    # You can just specify package directories manually here if your project is
-    # simple. Or you can use find_packages().
-    #
-    # Alternatively, if you just want to distribute a single Python file, use
-    # the `py_modules` argument instead as follows, which will expect a file
-    # called `my_module.py` to exist:
-    #
     py_modules=["junc", "storage", "server"],
-    #
-    # packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=['docopt'],
     extras_require={
         'dev': ['twine'],
         'test': ['coverage', 'pytest']
     },
-    # To provide executable scripts, use entry points in preference to the
-    # "scripts" keyword. Entry points provide cross-platform support and allow
-    # `pip` to create the appropriate form of executable for the target
-    # platform.
-    #
-    # For example, the following would provide a command called `sample` which
-    # executes the function `main` from this package when invoked:
     entry_points={  # Optional
         'console_scripts': [
             'junc=junc:main',

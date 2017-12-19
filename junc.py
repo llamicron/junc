@@ -4,7 +4,6 @@ Usage:
     junc list
     junc add (<name> <username> <ip>) [<location>]
     junc remove <name>
-    junc config <location>
 
 Options:
     -h --help     Show this screen.
@@ -12,10 +11,9 @@ Options:
 
 Notes:
     Data is stored in ~/.junc.json
-    Change location with "junc config /full/path/to/new/file"
 """
 
-VERSION = "0.1.1"
+VERSION = "0.1.5"
 
 import os
 import sys
@@ -27,8 +25,12 @@ from server import *
 
 def cli(args):
     storage = Storage()
-    server_list = storage.get_servers()
-    server_table = storage.get_server_table()
+    try:
+        server_list = storage.get_servers()
+        server_table = storage.get_server_table()
+    except PermissionError:
+        print("Error: Permission denied. Try again with sudo or change permissions on " + storage.file_path + " (Recommended)")
+        sys.exit(1)
 
     if args['list']:
         print(server_table)
@@ -45,6 +47,7 @@ def cli(args):
         if not connection:
             print("Couldn't find that server...")
             sys.exit(1)
+        print("Connecting...")
         os.system('ssh ' + connection)
 
     if args['remove']:
@@ -56,9 +59,6 @@ def cli(args):
                 print("Couldn't find that server...")
         storage.write(server_list)
 
-    if args['config']:
-        if storage.set_new_location(args['<location>']):
-            print("New location set")
 def main():
     arguments = docopt(__doc__, version="Junc v" + VERSION)
     cli(arguments)

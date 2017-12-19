@@ -1,42 +1,18 @@
 import json
-import sys # temp
 import os
 
 from terminaltables import AsciiTable
 
 class Storage():
     def __init__(self):
-
-        self.file_path = self.get_file_path()
-        # self.file_path = os.path.expanduser("~") + "/.junc.json"
+        self.file_path = os.path.expanduser("~") + "/.junc.json"
         self.create_file(self.file_path)
-
-    def get_file_path(self):
-        path = open('./storage_path', 'r').read().replace('\n', '')
-        if not path:
-            with open('./storage_path', 'w') as f:
-                path = os.path.expanduser("~") + "/junc.json"
-                f.write(path)
-                return path
-        return path
-        sys.exit(0)
-
-
-    def set_new_location(self, location):
-        try:
-            with open('./storage_path', 'w') as f:
-                f.write(location)
-            return True
-        except PermissionError:
-            print("Error: Permission denied. Pick a different location")
-            return False
 
     def create_file(self, file_path):
         try:
             open(file_path, 'a')
         except PermissionError:
-            print("Error: Permission denied. Using default location. Please choose a different location")
-            self.file_path = os.path.expanduser("~") + "/junc.json"
+            print("Error: Permission denied. Change permissions on " + file_path)
         return True
 
     def write(self, server_dict):

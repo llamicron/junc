@@ -1,34 +1,28 @@
-# Warning: I'm a framework whore and can't choose one atm. Bear with me
 # Junc (Short for Junction)
 ## SSH to servers easily
-```bash
-# Connect to a raspberry pi
-$ junc connect my_rpi
-# Connect to an AWS EC2
-$ junc connect my_ec2
-
-# Connect to anything with an ip
-```
-
+Now you don't have to remember usernames and IPs, and no more aliases for each of your machines.
 ## Usage
 ```bash
-# Add a server
-$ junc add [server_name] [username]@[ip]
-# OR
-$ junc add
-Name: [server_name]
-Username: [username]
-IP: [ip]
+$ junc --help
+# Usage:
+#     junc connect <name>
+#     junc list
+#     junc add (<name> <username> <ip>) [<location>]
+#     junc remove <name>
+# ...
 
-# See all your servers
+$ junc add [server_name] [username] [ip] [location (optional)]
+
 $ junc list
-# TODO: Add a server table here
+# +---------+----------------------+-------------+
+# | Name    | Address              | Location    |
+# +---------+----------------------+-------------+
+# | server1 | pi@192.168.0.115     | Server Room |
+# | server2 | pi@192.168.0.134     | Kitchen     |
+# | ec2     | ubuntu@145.555.55.57 | Oregon?     |
+# +---------+----------------------+-------------+
 
 $ junc connect [server_name]
-Connecting...
-# OR
-$ junc connect
-Name: [server_name]
 Connecting...
 ```
 
