@@ -15,7 +15,7 @@ Notes:
     Default backup location is ~/.junc.json.bak
 """
 
-VERSION = "0.1.5"
+VERSION = "0.1.6"
 
 import os
 import sys
