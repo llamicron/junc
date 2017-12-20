@@ -36,7 +36,7 @@ class Storage():
         ]
         for server in server_list:
             table_data.append([server['name'], server['username'] + "@" + server['ip'], server['location']])
-        return AsciiTable(table_data).table
+        return AsciiTable(table_data)
 
     def backup(self, location=None):
         if not location:
