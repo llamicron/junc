@@ -28,10 +28,20 @@ import os
 import sys
 
 from docopt import docopt
+from coolered import color
+from contextlib import suppress
 import json
 
 from storage import Storage
-from server import *
+
+def new_server(args):
+    attr_list = ['<ip>', '<username>', '<name>', '<location>']
+    new_server = {}
+    for attr in attr_list:
+        if attr in args.keys():
+            pretty_attr = attr.replace('<', '').replace('>', '')
+            new_server[pretty_attr] = args[attr]
+    return new_server
 
 def cli(args):
     storage = Storage()
@@ -56,7 +66,7 @@ def cli(args):
             args['<ip>'] = input("IP: ")
             args['<location>'] = input("Location: ")
             if not args['<name>'] or not args['<ip>'] or not args['<username>']:
-                print("Please fill out all the fields")
+                print(color('yellow', "Please fill out all the fields"))
                 print("\n")
         server_list.append(new_server(args))
         storage.write(server_list)
@@ -92,8 +102,10 @@ def cli(args):
 
 def main():
     arguments = docopt(__doc__, version="Junc v" + VERSION)
-    if not cli(arguments):
-        sys.exit(1)
+    with suppress(KeyboardInterrupt):
+        if not cli(arguments):
+            sys.exit(1)
+    print('\n')
     sys.exit(0)
 
 if __name__ == '__main__':
