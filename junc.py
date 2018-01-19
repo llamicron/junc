@@ -24,14 +24,13 @@ Notes:
     Default backup location is ~/.junc.json.bak
 """
 
-VERSION = "0.2.0"
-
 import os
 import sys
 
 from docopt import docopt
 from contextlib import suppress
 import json
+from version import VERSION
 
 from storage import Storage
 
@@ -50,18 +49,18 @@ def cli(args):
     try:
         server_list = storage.get_servers()
     except PermissionError:
-        print("Error: Permission denied. Try again with sudo or change permissions on " + storage.file_path + " (Recommended)")
+        print('Error: Permission denied. Try again with sudo or change permissions on ' + storage.file_path + ' (Recommended)')
         return False
 
     if args['add']:
         while not args['<name>'] or not args['<ip>'] or not args['<username>']:
-            args['<name>'] = input("Name: ")
-            args['<username>'] = input("Username: ")
-            args['<ip>'] = input("IP: ")
-            args['<location>'] = input("Location: ")
+            args['<name>'] = input('Name: ')
+            args['<username>'] = input('Username: ')
+            args['<ip>'] = input('IP: ')
+            args['<location>'] = input('Location: ')
             if not args['<name>'] or not args['<ip>'] or not args['<username>']:
-                print("Please fill out all the fields")
-                print("\n")
+                print('Please fill out all the fields')
+                print('\n')
         server_list.append(new_server(args))
         storage.write(server_list)
         args['list'] = True
@@ -75,21 +74,21 @@ def cli(args):
         return server_table
 
     if args['connect']:
-        connection = ""
+        connection = ''
         for server in server_list:
             if server['name'] == args['<name>']:
-                connection = server['username'] + "@" + server['ip']
+                connection = server['username'] + '@' + server['ip']
         if not connection:
             print("Couldn't find that server...")
             return False
-        print("Connecting...")
+        print('Connecting...')
         os.system('ssh ' + connection)
         return True
 
     if args['remove']:
         for i in range(len(server_list)):
             if server_list[i]['name'] == args['<name>']:
-                print(server_list[i]['name'] + " removed")
+                print(server_list[i]['name'] + ' removed')
                 del server_list[i]
                 storage.write(server_list)
                 return server_list
@@ -102,8 +101,8 @@ def cli(args):
         return True
 
     if args['restore']:
-        print("This will overwrite your current", storage.file_path)
-        choice = input("Are you sure? (y/n)")
+        print('This will overwrite your current', storage.file_path)
+        choice = input('Are you sure? (y/n)')
         if choice in ['y', 'Y', 'yes']:
             storage.restore(args['<file>'])
             return True
@@ -111,7 +110,7 @@ def cli(args):
             print('Canceled')
             return False
 def main():
-    arguments = docopt(__doc__, version="Junc v" + VERSION)
+    arguments = docopt(__doc__, version='Junc v' + VERSION)
     with suppress(KeyboardInterrupt):
         if not cli(arguments):
             sys.exit(1)

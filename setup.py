@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
-
-from junc import VERSION
+from version import VERSION
 
 here = path.abspath(path.dirname(__file__))
 
@@ -29,8 +28,8 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='connect ip ssh pipe raspberry pi rpi raspberry-pi ec2 server',
-    py_modules=["junc", "storage"],
-    install_requires=['docopt'],
+    py_modules=['junc', 'storage', 'version'],
+    install_requires=['docopt', 'coolered', 'terminaltables'],
     extras_require={
         'dev': ['twine'],
         'test': ['coverage', 'pytest']
