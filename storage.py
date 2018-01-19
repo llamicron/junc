@@ -2,6 +2,7 @@ import json
 from shutil import copy2
 import os
 
+from coolered import color
 from terminaltables import AsciiTable
 
 class Storage():
@@ -30,15 +31,16 @@ class Storage():
     def get_server_table(self):
         server_list = self.get_servers()
         if not server_list:
-            return "No Servers :("
+            return "No Servers yet :(\nAdd some!"
         table_data = [
             ['Name', "Address", "Location"],
         ]
         for server in server_list:
             table_data.append([server['name'], server['username'] + "@" + server['ip'], server['location']])
-        return AsciiTable(table_data)
+        return AsciiTable(table_data).table
 
     def backup(self, location=None):
         if not location:
             location = self.file_path + '.bak'
+        print('Backing up to', location)
         copy2(self.file_path, location)

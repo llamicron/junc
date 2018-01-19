@@ -15,13 +15,14 @@ setup(
     description='Connect to servers easily',
     long_description=long_description,
     url='https://github.com/llamicron/junc',
-    author='Luke Sweeney',
+    author='llamicron',
     author_email='llamicron@gmail.com',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development',
         'License :: OSI Approved :: MIT License',
+        # Have not testing on these versions yet
         # 'Programming Language :: Python :: 3',
         # 'Programming Language :: Python :: 3.4',
         # 'Programming Language :: Python :: 3.5',

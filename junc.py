@@ -1,7 +1,7 @@
 """
 Usage:
-    junc connect <name>
     junc list [--json]
+    junc connect <name>
     junc add [(<name> <username> <ip>)] [<location>]
     junc remove <name>
     junc backup [<file>]
@@ -16,6 +16,7 @@ Arguments:
     username      Username you wish to login with
     ip            The IP of the server
     location      (Optional) Where the server is located (useful for headless machines ie. raspberry pi)
+    file          A backup is created at this location (default: ~/.junc.json.bak)
 
 Notes:
     Data is stored in ~/.junc.json
@@ -39,7 +40,8 @@ def new_server(args):
     new_server = {}
     for attr in attr_list:
         if attr in args.keys():
-            pretty_attr = attr.replace('<', '').replace('>', '')
+            # cut off the < and >
+            pretty_attr = attr[1:-1]
             new_server[pretty_attr] = args[attr]
     return new_server
 
@@ -56,7 +58,7 @@ def cli(args):
         if args['--json']:
             print(json.dumps(server_list, indent=2))
             return server_list
-        print(server_table.table)
+        print(server_table)
         return server_table
 
     if args['add']:
@@ -97,7 +99,7 @@ def cli(args):
 
     if args['backup']:
         storage.backup(args['<file>'])
-        print("Done.")
+        color('green', "Done.")
         return True
 
 def main():
