@@ -5,6 +5,7 @@ Usage:
     junc add [(<name> <username> <ip>)] [<location>]
     junc remove <name>
     junc backup [<file>]
+    junc restore [<file>]
 
 Options:
     -h --help     Show this screen.
@@ -16,7 +17,7 @@ Arguments:
     username      Username you wish to login with
     ip            The IP of the server
     location      (Optional) Where the server is located (useful for headless machines ie. raspberry pi)
-    file          A backup is created at this location (default: ~/.junc.json.bak)
+    file          A backup is created at (or restored from) this location (default: ~/.junc.json.bak)
 
 Notes:
     Data is stored in ~/.junc.json
@@ -99,9 +100,17 @@ def cli(args):
 
     if args['backup']:
         storage.backup(args['<file>'])
-        color('green', "Done.")
         return True
 
+    if args['restore']:
+        print("This will overwrite your current", storage.file_path)
+        choice = input("Are you sure? (y/n)")
+        if choice in ['y', 'Y', 'yes']:
+            storage.restore(args['<file>'])
+            return True
+        else:
+            print('Canceled')
+            return False
 def main():
     arguments = docopt(__doc__, version="Junc v" + VERSION)
     with suppress(KeyboardInterrupt):

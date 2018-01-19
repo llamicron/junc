@@ -39,8 +39,17 @@ class Storage():
             table_data.append([server['name'], server['username'] + "@" + server['ip'], server['location']])
         return AsciiTable(table_data).table
 
-    def backup(self, location=None):
+    def backup(self, location=None, reverse=False):
         if not location:
             location = self.file_path + '.bak'
-        print('Backing up to', location)
-        copy2(self.file_path, location)
+        if reverse:
+            print('Restoring to', self.file_path)
+            copy2(location, self.file_path)
+            color('green', 'Done')
+        else:
+            print('Backing up to', location)
+            copy2(self.file_path, location)
+            color('green', 'Done')
+
+    def restore(self, location=None):
+        self.backup(location, True)
