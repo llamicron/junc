@@ -24,13 +24,12 @@ Notes:
     Default backup location is ~/.junc.json.bak
 """
 
-VERSION = "0.1.8"
+VERSION = "0.2.0"
 
 import os
 import sys
 
 from docopt import docopt
-from coolered import color
 from contextlib import suppress
 import json
 
@@ -54,14 +53,6 @@ def cli(args):
         print("Error: Permission denied. Try again with sudo or change permissions on " + storage.file_path + " (Recommended)")
         return False
 
-    if args['list']:
-        server_table = storage.get_server_table()
-        if args['--json']:
-            print(json.dumps(server_list, indent=2))
-            return server_list
-        print(server_table)
-        return server_table
-
     if args['add']:
         while not args['<name>'] or not args['<ip>'] or not args['<username>']:
             args['<name>'] = input("Name: ")
@@ -69,11 +60,19 @@ def cli(args):
             args['<ip>'] = input("IP: ")
             args['<location>'] = input("Location: ")
             if not args['<name>'] or not args['<ip>'] or not args['<username>']:
-                print(color('yellow', "Please fill out all the fields"))
+                print("Please fill out all the fields")
                 print("\n")
         server_list.append(new_server(args))
         storage.write(server_list)
-        return server_list
+        args['list'] = True
+
+    if args['list']:
+        server_table = storage.get_server_table()
+        if args['--json']:
+            print(json.dumps(server_list, indent=2))
+            return server_list
+        print(server_table)
+        return server_table
 
     if args['connect']:
         connection = ""
