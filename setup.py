@@ -28,7 +28,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='connect ip ssh pipe raspberry pi rpi raspberry-pi ec2 server',
-    py_modules=["junc", "storage", "server"],
+    py_modules=["junc", "storage"],
     install_requires=['docopt'],
     extras_require={
         'dev': ['twine'],
