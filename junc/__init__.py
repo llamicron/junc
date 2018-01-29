@@ -24,6 +24,17 @@ Notes:
     Default backup location is ~/.junc.json.bak
 """
 
+"""
+My nigga @Gambit told me I should add docstrings so i am
+This will keep a json file of servers you add. It can display them as a pretty table.
+The data associated with a table is as follows:
+    1. Name
+    2. Username
+    3. IP
+    4. Location (optional)
+You can run `junc connect [server-name]` to ssh into a server easily
+"""
+
 import os
 import sys
 
@@ -34,6 +45,10 @@ import json
 from junc.storage import Storage
 
 def new_server(args):
+    """
+    Takes the docopt argument vector and returns a new server 'object'
+    (Just a dictionary, not it's own class)
+    """
     attr_list = ['<ip>', '<username>', '<name>', '<location>']
     new_server = {}
     for attr in attr_list:
@@ -44,6 +59,9 @@ def new_server(args):
     return new_server
 
 def cli(args):
+    """
+    Inteprets the docopt argument vector and does something cool with it
+    """
     storage = Storage()
     try:
         server_list = storage.get_servers()
@@ -108,6 +126,7 @@ def cli(args):
         else:
             print('Canceled')
             return False
+
 def main():
     arguments = docopt(__doc__)
     with suppress(KeyboardInterrupt):
