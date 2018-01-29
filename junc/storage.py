@@ -10,7 +10,7 @@ class Storage():
     Handles storing and retrieving of server data
     """
     def __init__(self):
-        self.file_path = os.path.expanduser("~") + "/.junc.json"
+        self.file_path = os.path.join(os.path.expanduser("~"), ".junc.json")
         self.create_file(self.file_path)
 
     def create_file(self, file_path):

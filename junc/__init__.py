@@ -70,62 +70,80 @@ def cli(args):
         return False
 
     if args['add']:
-        while not args['<name>'] or not args['<ip>'] or not args['<username>']:
-            args['<name>'] = input('Name: ')
-            args['<username>'] = input('Username: ')
-            args['<ip>'] = input('IP: ')
-            args['<location>'] = input('Location: ')
-            if not args['<name>'] or not args['<ip>'] or not args['<username>']:
-                print('Please fill out all the fields')
-                print('\n')
-        server_list.append(new_server(args))
-        storage.write(server_list)
-        args['list'] = True
+        return add(args, server_list, storage)
 
     if args['list']:
-        server_table = storage.get_server_table()
-        if args['--json']:
-            print(json.dumps(server_list, indent=2))
-            return server_list
-        print(server_table)
-        return server_table
+        return list_tables(args, server_list, storage)
 
     if args['connect']:
-        connection = ''
-        for server in server_list:
-            if server['name'] == args['<name>']:
-                connection = server['username'] + '@' + server['ip']
-        if not connection:
-            print("Couldn't find that server...")
-            return False
-        print('Connecting...')
-        os.system('ssh ' + connection)
-        return True
+        return connect(args, server_list)
 
     if args['remove']:
-        for i in range(len(server_list)):
-            if server_list[i]['name'] == args['<name>']:
-                print(server_list[i]['name'] + ' removed')
-                del server_list[i]
-                storage.write(server_list)
-                return server_list
-            if i == len(server_list) - 1:
-                print("Couldn't find that server...")
-                return False
+        return remove(args, server_list, storage)
 
     if args['backup']:
-        storage.backup(args['<file>'])
-        return True
+        return backup(args, storage)
 
     if args['restore']:
-        print('This will overwrite your current', storage.file_path)
-        choice = input('Are you sure? (y/n)')
-        if choice in ['y', 'Y', 'yes']:
-            storage.restore(args['<file>'])
-            return True
-        else:
-            print('Canceled')
+        return restore(args, storage)
+
+def list_tables(args, server_list, storage):
+    server_table = storage.get_server_table()
+    if args['--json']:
+        print(json.dumps(server_list, indent=2))
+        return server_list
+    print(server_table)
+    return server_table
+
+def add(args, server_list, storage):
+    while not args['<name>'] or not args['<ip>'] or not args['<username>']:
+        args['<name>'] = input('Name: ')
+        args['<username>'] = input('Username: ')
+        args['<ip>'] = input('IP: ')
+        args['<location>'] = input('Location: ')
+        if not args['<name>'] or not args['<ip>'] or not args['<username>']:
+            print('Please fill out all the fields')
+            print('\n')
+    server_list.append(new_server(args))
+    storage.write(server_list)
+    args['list'] = True
+
+def connect(args, server_list):
+    connection = ''
+    for server in server_list:
+        if server['name'] == args['<name>']:
+            connection = server['username'] + '@' + server['ip']
+    if not connection:
+        print("Couldn't find that server...")
+        return False
+    print('Connecting...')
+    os.system('ssh ' + connection)
+    return True
+
+def remove(args, server_list, storage):
+    for i in range(len(server_list)):
+        if server_list[i]['name'] == args['<name>']:
+            print(server_list[i]['name'] + ' removed')
+            del server_list[i]
+            storage.write(server_list)
+            return server_list
+        if i == len(server_list) - 1:
+            print("Couldn't find that server...")
             return False
+
+def backup(args, storage):
+    storage.backup(args['<file>'])
+    return True
+
+def restore(args, storage):
+    print('This will overwrite your current', storage.file_path)
+    choice = input('Are you sure? (y/n)')
+    if choice in ['y', 'Y', 'yes']:
+        storage.restore(args['<file>'])
+        return True
+    else:
+        print('Canceled')
+        return False
 
 def main():
     arguments = docopt(__doc__)

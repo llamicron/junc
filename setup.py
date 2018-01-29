@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='junc',
-    version='0.2.8',
+    version='0.3.1',
     description='Connect to servers easily',
     long_description=long_description,
     url='https://github.com/llamicron/junc',
