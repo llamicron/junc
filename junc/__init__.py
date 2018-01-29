@@ -30,9 +30,8 @@ import sys
 from docopt import docopt
 from contextlib import suppress
 import json
-from version import VERSION
 
-from storage import Storage
+from junc.storage import Storage
 
 def new_server(args):
     attr_list = ['<ip>', '<username>', '<name>', '<location>']
@@ -110,7 +109,7 @@ def cli(args):
             print('Canceled')
             return False
 def main():
-    arguments = docopt(__doc__, version='Junc v' + VERSION)
+    arguments = docopt(__doc__)
     with suppress(KeyboardInterrupt):
         if not cli(arguments):
             sys.exit(1)

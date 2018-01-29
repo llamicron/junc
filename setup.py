@@ -1,7 +1,6 @@
 from setuptools import setup, find_packages
 from codecs import open
 from os import path
-from version import VERSION
 
 here = path.abspath(path.dirname(__file__))
 
@@ -10,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='junc',
-    version=VERSION,
+    version='0.2.8',
     description='Connect to servers easily',
     long_description=long_description,
     url='https://github.com/llamicron/junc',
@@ -28,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='connect ip ssh pipe raspberry pi rpi raspberry-pi ec2 server',
-    py_modules=['junc', 'storage', 'version'],
+    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=['docopt', 'coolered', 'terminaltables'],
     extras_require={
         'dev': ['twine'],
@@ -36,7 +35,7 @@ setup(
     },
     entry_points={  # Optional
         'console_scripts': [
-            'junc=junc:main',
+            'junc=junc.__init__:main',
         ],
     },
 )

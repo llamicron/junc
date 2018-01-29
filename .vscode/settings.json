@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "${workspaceFolder}/env/bin/python",
+  "python.pythonPath": "/Users/llamicron/Envs/main3/bin/python",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
