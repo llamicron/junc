@@ -59,7 +59,7 @@ $ junc list
 | playground  | llamicron@192.168.0.139 | Office      |
 +-------------+-------------------------+-------------+
 ```
-(![Imgur link](https://imgur.com/a/ccfey) if the table above doesn't render correctly)
+(![Imgur link](https://i.imgur.com/fDjotEs.png) if the table above doesn't render correctly)
 
 `--json` is an optional flag for `list`. It will output the server list as json.
 
