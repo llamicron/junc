@@ -59,7 +59,7 @@ $ junc list
 | playground  | llamicron@192.168.0.139 | Office      |
 +-------------+-------------------------+-------------+
 ```
-([Imgur link](https://imgur.com/a/ccfey) if the table above doesn't render correctly)
+(![Imgur link](https://imgur.com/a/ccfey) if the table above doesn't render correctly)
 
 `--json` is an optional flag for `list`. It will output the server list as json.
 
@@ -90,14 +90,14 @@ The optional file argument is where to copy the file from.
 # Tips
 ## Export
 ### To Hastebin
-If you have the `haste` gem install (`gem install haste`):
+If you have the `haste` gem installed (`gem install haste`):
 ```sh
 junc list --json | haste
 ```
-Keep in mind that haste only keeps docs for 30 since their last view, and they may be removed without notice. This is useful for moving lists between systems or sharing with other developers.
+Keep in mind that haste only keeps docs for 30 days since their last view, and they may be removed without notice. This is useful for moving lists between systems or sharing with other developers, but not backups since it will be removed one day.
 
 ### To Gist
-You'll need the gist gem or package installed and configured, which requires you to login to your github account. Install the gem with `gem install gist` or on MacOS with `brew install gist`
+You'll need the [gist](https://github.com/defunkt/gist) gem or package installed and configured, which requires you to login to your github account. Install the gem with `gem install gist` or on MacOS with `brew install gist`
 ```sh
 junc list --json | gist -f junc_export.json
 ```
