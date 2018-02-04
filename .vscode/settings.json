@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/Users/llamicron/Envs/main3/bin/python",
+  "python.pythonPath": "/Users/llamicron/junc/junc_env/bin/python",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -9,6 +9,8 @@
     "env/": true,
     "junc.egg-info/": true,
     "dist/": true,
-    "**/__pycache__": true
+    "**/__pycache__": true,
+    "junc_env": true,
+    "entry.sh": true
   }
 }
