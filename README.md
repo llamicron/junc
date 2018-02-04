@@ -1,4 +1,4 @@
-# Junc (Short for Junction)
+# Junc
 ## SSH to servers easily
 Now you don't have to remember usernames and IPs, and no more aliases for each of your machines.
 
