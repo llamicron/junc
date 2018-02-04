@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+0.3.0
+-----
+
+* Integrates pbr
 * Extracts main actions to their own methods
 * Adds some docstrings
 * Re organize some shit
