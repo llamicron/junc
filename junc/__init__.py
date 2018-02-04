@@ -25,7 +25,6 @@ Notes:
 """
 
 """
-My nigga @Gambit told me I should add docstrings so i am
 This will keep a json file of servers you add. It can display them as a pretty table.
 The data associated with a table is as follows:
     1. Name
