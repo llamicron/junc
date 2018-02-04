@@ -1,6 +1,8 @@
 # Junc Documentation
 
+
 ## index
+* [Installation](#installation)
 * [Quickstart](#quickstart)
 * [Things you can do](#things-you-can-do)
   * [Add a server](#add)
@@ -11,6 +13,19 @@
   * [Restore](#restore)
 * [Tips](#tips)
   * [Export](#export)
+
+# Installation
+Install with pip
+```sh
+pip install junc
+```
+Or install from source (not stable)
+```
+$ git clone https://github.com/llamicron/junc.git
+$ cd junc
+$ pip install -r requirements.txt
+$ make install
+```
 
 # Quickstart
 ```sh
