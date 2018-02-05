@@ -9,8 +9,10 @@ class Storage():
     """
     Handles storing and retrieving of server data
     """
-    def __init__(self):
+    def __init__(self, testing = False):
         self.file_path = os.path.join(os.path.expanduser("~"), ".junc.json")
+        if testing:
+            self.file_path += '.test'
         self.create_file(self.file_path)
 
     def create_file(self, file_path):
@@ -21,6 +23,7 @@ class Storage():
             open(file_path, 'a')
         except PermissionError:
             print("Error: Permission denied. Change permissions on " + file_path)
+            raise
         return True
 
     def write(self, server_list):
@@ -29,7 +32,6 @@ class Storage():
         """
         with open(self.file_path, 'w') as f:
             json.dump(server_list, f, indent=4)
-        return True
 
     def get_servers(self):
         try:
@@ -49,7 +51,7 @@ class Storage():
         ]
         for server in server_list:
             table_data.append([server['name'], server['username'] + "@" + server['ip'], server['location']])
-        return AsciiTable(table_data).table
+        return AsciiTable(table_data)
 
     def backup(self, location=None, reverse=False):
         """

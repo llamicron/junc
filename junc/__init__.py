@@ -41,7 +41,11 @@ from docopt import docopt
 from contextlib import suppress
 import json
 
-from junc.storage import Storage
+try:
+    from storage import Storage
+except ImportError:
+    from .storage import Storage
+import junc
 
 def new_server(args):
     """
@@ -72,7 +76,7 @@ def cli(args):
         return add(args, server_list, storage)
 
     if args['list']:
-        return list_tables(args, server_list, storage)
+        return list_tables(server_list, storage, json_format=args['--json'])
 
     if args['connect']:
         return connect(args, server_list)
@@ -86,13 +90,14 @@ def cli(args):
     if args['restore']:
         return restore(args, storage)
 
-def list_tables(args, server_list, storage):
+def list_tables(server_list, storage, json_format = False):
     server_table = storage.get_server_table()
-    if args['--json']:
+    if json_format:
         print(json.dumps(server_list, indent=2))
         return server_list
-    print(server_table)
+    print(server_table.table)
     return server_table
+
 
 def add(args, server_list, storage):
     while not args['<name>'] or not args['<ip>'] or not args['<username>']:
