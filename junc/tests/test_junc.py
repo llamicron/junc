@@ -1,7 +1,6 @@
 import unittest
 import sys
 
-import junc
+from docopt import docopt
 
-def test_list_tables():
-    pass
+import junc
