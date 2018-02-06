@@ -59,7 +59,6 @@ class TestJunc(unittest.TestCase):
             assert item in server.keys()
             assert type(server[item]) is str
 
-
     def test_remove_server(self):
         servers = [
             {
@@ -82,4 +81,3 @@ class TestJunc(unittest.TestCase):
         self.junc.what_to_do_with(args)
 
         assert len(self.junc.st.get_servers()) == old_size - 1
-
