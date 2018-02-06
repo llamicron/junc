@@ -39,6 +39,10 @@ $ junc list
 # Connect to a server
 $ junc connect <server_name>
 ```
+To see the version:
+```sh
+pip list | grep junc
+```
 
 # Things you can do
 

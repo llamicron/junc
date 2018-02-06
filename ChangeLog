@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+2.0.2
+-----
+
+* Extracts main to main method so package will work
+
 2.0.1
 -----
 
