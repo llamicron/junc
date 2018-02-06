@@ -1,6 +1,27 @@
 CHANGES
 =======
 
+2.0.1
+-----
+
+* Removes old code and old data from docs
+
+2.0.0
+-----
+
+* Adds backup and restore functionality
+* Adds some validation
+* Adds connect functionality
+* Adds travis badge and turns off emails for travis
+* Adds .travis.yml
+* More stuff
+* Whole lot of stuff (my commit message quality is declining rapidly)
+* Adds a basic Junc class
+* Adds a test for junc before class based rewrite (ugh)
+* Few small edits
+* Adds unit tests for storage module
+* Doc edits
+
 1.0.0
 -----
 

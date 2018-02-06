@@ -152,7 +152,7 @@ class Junc(object):
         os.system('ssh ' + connection)
         return 'Done'
 
-if __name__ == '__main__':
+def main():
     args = docopt(__doc__)
     junc = Junc()
     results = junc.what_to_do_with(args)
@@ -160,3 +160,6 @@ if __name__ == '__main__':
         print(results.table)
     else:
         print(results)
+
+if __name__ == '__main__':
+    main()
