@@ -66,8 +66,6 @@ class Junc(object):
                 similarities.append('address')
         return similarities
 
-
-
     def what_to_do_with(self, args):
         """
         Inteprets the docopt argument vector and does something cool with it
@@ -95,6 +93,14 @@ class Junc(object):
 
         if args['connect']:
             self.connect(args['<name>'])
+
+        if args['backup']:
+            self.st.backup(args['<file>'])
+            return ''
+
+        if args['restore']:
+            self.st.restore(args['<file>'])
+            return ''
 
     def remove(self, name):
         for i in range(len(self.servers)):
@@ -145,7 +151,6 @@ class Junc(object):
         print('Connecting...')
         os.system('ssh ' + connection)
         return 'Done'
-
 
 if __name__ == '__main__':
     args = docopt(__doc__)
