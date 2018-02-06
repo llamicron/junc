@@ -46,6 +46,9 @@
     {
       "label": "test",
       "command": "pytest",
+      "args": [
+        "junc/tests/test_junc.py"
+      ],
       "group": {
         "kind": "test",
         "isDefault": true

@@ -98,7 +98,6 @@ def list_tables(server_list, storage, json_format = False):
     print(server_table.table)
     return server_table
 
-
 def add(args, server_list, storage):
     while not args['<name>'] or not args['<ip>'] or not args['<username>']:
         args['<name>'] = input('Name: ')
