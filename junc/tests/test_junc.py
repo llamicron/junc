@@ -29,6 +29,26 @@ class TestJunc(unittest.TestCase):
             assert item in server.keys()
             assert type(server[item]) is str
 
-    # def test_add(self):
-    #     old_size = len(self.junc.servers)
-    #     self.junc.add()
+
+    def test_remove_server(self):
+        servers = [
+            {
+                'name': 'to_remove',
+                'ip': '19213.1235',
+                'username': 'doesnt matter',
+                'location': 'this really doesnt matter'
+            },
+            {
+                'name': 'another one',
+                'ip': '19213.1235',
+                'username': 'doesnt matter',
+                'location': 'this really doesnt matter'
+            }
+        ]
+        self.junc.servers = servers
+        self.junc.save()
+        old_size = len(self.junc.st.get_servers())
+        args = docopt(doc, ['remove', 'to_remove'])
+        self.junc.what_to_do_with(args)
+
+        assert len(self.junc.st.get_servers()) == old_size - 1

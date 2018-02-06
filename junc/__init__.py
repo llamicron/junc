@@ -41,12 +41,33 @@ class Junc(object):
 
         self.servers = self.st.get_servers()
 
+    def save(self):
+        self.st.write(self.servers)
+
     def what_to_do_with(self, args):
         """
         Inteprets the docopt argument vector and does something cool with it
         """
         if args['list']:
             return self.list_servers(raw=args['--json'])
+
+        if args['add']:
+            server = self.new_server(args)
+            self.servers.append(server)
+            self.save()
+            return server['name'] + ' added'
+
+        if args['remove']:
+            self.remove(args['<name>'])
+
+    def remove(self, name):
+        for i in range(len(self.servers)):
+            if self.servers[i]['name'] == name:
+                del self.servers[i]
+                self.save()
+                return True
+            if i == len(server_list) - 1:
+                print("Couldn't find that server...")
 
     def list_servers(self, raw=False):
         if raw:
