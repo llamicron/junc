@@ -39,20 +39,6 @@ class Storage():
         except json.decoder.JSONDecodeError:
             return []
 
-    def get_server_table(self):
-        """
-        Gets all the servers and plops them into a terminal table
-        """
-        server_list = self.get_servers()
-        if not server_list:
-            return "No Servers yet :(\nAdd some!"
-        table_data = [
-            ['Name', "Address", "Location"],
-        ]
-        for server in server_list:
-            table_data.append([server['name'], server['username'] + "@" + server['ip'], server['location']])
-        return AsciiTable(table_data)
-
     def backup(self, location=None, reverse=False):
         """
         Copies the contents of the storage file to the location variable

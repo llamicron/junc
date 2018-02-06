@@ -1,50 +1,34 @@
 import unittest
-import os
-import sys
-import json
 
-from terminaltables import AsciiTable
 from docopt import docopt
+from terminaltables import AsciiTable
 
-from .. import Junc
-from ..storage import Storage
+from .. import Junc, __doc__ as doc
 
 class TestJunc(unittest.TestCase):
     def setUp(self):
-        self.test_file = os.path.join(os.path.expanduser('~'), '.junc.json.test')
-        open(self.test_file, 'w')
-        self.junc = Junc(jsonfile=self.test_file)
+        self.junc = Junc(testing = True)
 
-    def tearDown(self):
-        os.truncate(self.test_file, 0)
+    def test_list_servers(self):
+        args = docopt(doc, ['list'])
+        results = self.junc.what_to_do_with(args)
 
-    def seed_server_list(self):
-        servers = [
-            {
-                "username": "pi",
-                "ip": "192.168.0.134",
-                "name": "sween",
-                "location": "Dining Room"
-            },
-            {
-                "username": "pi",
-                "ip": "192.168.0.169",
-                "name": "brewpi-prod",
-                "location": "Brew Rig"
-            }
-        ]
-        with open(self.test_file, 'w'):
-            file.write(json.dumps(servers))
+        assert type(results) is AsciiTable
 
-    def test_it_has_a_file_with_a_default(self):
-        default = os.path.join(os.path.expanduser('~'), '.junc.json')
-        new = os.path.join(os.path.expanduser('~'), '.junc.json.test')
-        junc = Junc()
-        assert junc.jsonfile == default
+        args = docopt(doc, ['list', '--json'])
+        results = self.junc.what_to_do_with(args)
 
-        junc = Junc(jsonfile=new)
-        assert junc.jsonfile == new
+        print(results)
+        assert type(results) is str
 
-    def test_get_server_list(self):
-        # File is empty right now
-        assert self.junc.get_servers() == []
+    def test_new_server(self):
+        args = docopt(doc, ['add', 'server-name', 'username', '123.456.789', 'right here'])
+        server = self.junc.new_server(args)
+        assert type(server) is dict
+        for item in ['name', 'username', 'ip', 'location']:
+            assert item in server.keys()
+            assert type(server[item]) is str
+
+    # def test_add(self):
+    #     old_size = len(self.junc.servers)
+    #     self.junc.add()

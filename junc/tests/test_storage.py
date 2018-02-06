@@ -65,14 +65,6 @@ class TestStorage(unittest.TestCase):
         server_list = self.st.get_servers()
         assert server_list == self.sv_list
 
-    def test_get_server_table(self):
-        # "No server list" case
-        assert self.st.get_server_table() == "No Servers yet :(\nAdd some!"
-
-        self.st.write(self.sv_list)
-
-        assert type(self.st.get_server_table()) is AsciiTable
-
     def test_backup(self):
         assert not os.path.isfile(self.st.file_path + '.bak')
         self.st.backup()
