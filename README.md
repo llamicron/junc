@@ -1,4 +1,5 @@
 # Junc
+[![Build Status](https://travis-ci.org/llamicron/junc.svg?branch=master)](https://travis-ci.org/llamicron/junc)
 ## SSH to servers easily
 Now you don't have to remember usernames and IPs, and no more aliases for each of your machines.
 
