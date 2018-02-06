@@ -35,8 +35,9 @@ try:
 except ImportError:
     from .storage import Storage
 
+
 class Junc(object):
-    def __init__(self, testing = False):
+    def __init__(self, testing=False):
         self.st = Storage(testing=testing)
 
         self.servers = self.st.get_servers()
@@ -59,6 +60,9 @@ class Junc(object):
 
         if args['remove']:
             self.remove(args['<name>'])
+
+        if args['connect']:
+            self.connect(args['<name>'])
 
     def remove(self, name):
         for i in range(len(self.servers)):
@@ -98,6 +102,18 @@ class Junc(object):
                     [server['name'], server['username'] + "@" + server['ip'], server['location']])
         return AsciiTable(table_data)
 
+    def connect(self, name):
+        connection = ''
+        for server in self.servers:
+            if server['name'] == name:
+                connection = server['username'] + '@' + server['ip']
+        if not connection:
+            return "Couldn't find that server..."
+        print('Connecting...')
+        os.system('ssh ' + connection)
+        return 'Done'
+
+
 if __name__ == '__main__':
     args = docopt(__doc__)
     junc = Junc()
@@ -106,4 +122,3 @@ if __name__ == '__main__':
         print(results.table)
     else:
         print(results)
-
