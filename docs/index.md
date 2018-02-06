@@ -51,16 +51,9 @@ Connecting...
 ## Add
 Add a server to your server list:
 ```
-$ junc add
-Name: <server_name>
-Username: <username>
-IP: <ip>
-Location: <optional_location>
-```
-or inline:
-```
 $ junc add <server_name> <username> <ip> [<location>]
 ```
+`location` is optional
 
 ## List
 ```

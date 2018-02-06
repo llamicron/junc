@@ -66,9 +66,12 @@ class TestStorage(unittest.TestCase):
         assert server_list == self.sv_list
 
     def test_backup(self):
-        assert not os.path.isfile(self.st.file_path + '.bak')
+        backup_file = self.st.file_path + '.bak'
+        if os.path.isfile(backup_file):
+            os.remove(backup_file)
+        assert not os.path.isfile(backup_file)
         self.st.backup()
-        assert os.path.isfile(self.st.file_path + '.bak')
+        assert os.path.isfile(backup_file)
 
     def test_restore(self):
         self.st.backup()
