@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Adds a tox.ini file
 * update appveyor.yml
 * Adds appveyor.yml to test on windows
 * Adds version line to docs

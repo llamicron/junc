@@ -44,7 +44,7 @@ class TestStorage(unittest.TestCase):
     def test_create_file_in_protected_dir(self):
         file_path = '/bin/junc_test_file'
         assert not os.path.isfile(file_path)
-        with self.assertRaises(PermissionError):
+        with self.assertRaises(IOError):
             self.st.create_file(file_path)
         assert not os.path.isfile(file_path)
 
