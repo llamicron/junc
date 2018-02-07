@@ -1,6 +1,5 @@
 # Junc Documentation
 
-
 ## index
 * [Installation](#installation)
 * [Quickstart](#quickstart)

@@ -1,0 +1,20 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python33"
+    - PYTHON: "C:\\Python34"
+    - PYTHON: "C:\\Python35"
+    - PYTHON: "C:\\Python36-x64"
+
+install:
+  - "%PYTHON%\\python.exe -m pip install wheel"
+
+build: off
+
+test_script:
+  - "build.cmd %PYTHON%\\python.exe setup.py test"
+
+after_test:
+  - "build.cmd %PYTHON%\\python.exe setup.py bdist_wheel"
+
+artifacts:
+  - path: dist\*
