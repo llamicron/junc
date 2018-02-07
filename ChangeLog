@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+* update appveyor.yml
+* Adds appveyor.yml to test on windows
+* Adds version line to docs
+
 2.0.2
 -----
 
