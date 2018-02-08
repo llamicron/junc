@@ -1,5 +1,6 @@
 import unittest
-import os
+from os import remove
+from os.path import isfile, join, expanduser
 import json
 
 from docopt import docopt
@@ -10,16 +11,20 @@ from .. import Junc, __doc__ as doc
 class TestJunc(unittest.TestCase):
     def setUp(self):
         self.junc = Junc(testing = True)
+        self.seed_test_file()
+        self.junc.get_servers()
 
     def tearDown(self):
-        base_path = os.path.join(os.path.expanduser('~'), '.junc.json.test')
+        # Files that may be created during testing
+        base_path = join(expanduser('~'), '.junc.json.test')
         files = [
             base_path,
-            base_path + '.test'
+            base_path + '.bak',
+            base_path + '.custom_bak',
         ]
         for fi in files:
-            if os.path.isfile(fi):
-                os.remove(fi)
+            if isfile(fi):
+                remove(fi)
 
     def seed_test_file(self):
         servers = [
@@ -81,3 +86,53 @@ class TestJunc(unittest.TestCase):
         self.junc.what_to_do_with(args)
 
         assert len(self.junc.st.get_servers()) == old_size - 1
+
+    def test_backup_and_restore_with_custom_location(self):
+        fi = self.junc.st.file_path
+        custom_fi = fi + '.custom_bak'
+
+        assert isfile(fi)
+        assert not isfile(custom_fi)
+
+        args = docopt(doc, ['backup', custom_fi])
+        self.junc.what_to_do_with(args)
+
+        assert isfile(custom_fi)
+        remove(fi)
+        assert not isfile(fi)
+
+        args = docopt(doc, ['restore', custom_fi])
+        self.junc.what_to_do_with(args)
+
+        assert isfile(custom_fi)
+        assert isfile(fi)
+
+    def test_restore(self):
+        fi = self.junc.st.file_path
+
+        assert not isfile(fi + '.bak')
+
+        args = docopt(doc, ['backup'])
+        self.junc.what_to_do_with(args)
+
+        assert isfile(fi)
+        assert isfile(fi + '.bak')
+
+        remove(fi)
+        assert not isfile(fi)
+
+        args = docopt(doc, ['restore'])
+        self.junc.what_to_do_with(args)
+
+        assert isfile(fi)
+        assert isfile(fi + '.bak')
+
+    def test_similarities(self):
+        new_server = {
+            "name": "brewpi-prod", # This name exists in the seed data
+            "ip": "192.168.0.169",
+            "username": "pi",      # So does this username + ip combination
+            "location": "Pytest :)"
+        }
+
+        assert self.junc.find_similar_server(new_server) == ['name', 'address']

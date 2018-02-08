@@ -35,7 +35,7 @@ try:
 except ImportError:
     from .storage import Storage
 
-def confirm(message):
+def confirm(message): # pragma: no cover
     while True:
         choice = input(message + ' [y/n]: ')
         if choice.upper() == 'Y':
@@ -49,22 +49,39 @@ class Junc(object):
     def __init__(self, testing=False):
         self.st = Storage(testing=testing)
 
+        self.get_servers()
+
+    def get_servers(self):
         self.servers = self.st.get_servers()
 
     def save(self):
         self.st.write(self.servers)
 
-    def find_similar_server(self, args):
+    def find_similar_server(self, compare):
         """
         Returns a list of similarities between input and servers, so there won't be any duplicate servers
+        If the name or address (username + ip) of a server is the same
         """
         similarities = []
         for server in self.servers:
-            if server['name'] == args['<name>']:
+            if server['name'] == compare['name']:
                 similarities.append('name')
-            if server['username'] == args['<username>'] and server['ip'] == args['<ip>']:
+            if server['username'] == compare['username'] and server['ip'] == compare['ip']:
                 similarities.append('address')
         return similarities
+
+    def add_server(self, server):
+        """
+        Checks for similarities
+        """
+        similarities = self.find_similar_servers(server)
+        if 'name' in similarities:
+            return "There's already a server with that name, try another"
+        if 'address' in similarities:
+            if not confirm("A server exists with the same address. Add this one too?"):
+                return 'Server not added'
+
+        self.servers.append(server)
 
     def what_to_do_with(self, args):
         """
@@ -74,15 +91,8 @@ class Junc(object):
             return self.list_servers(raw=args['--json'])
 
         if args['add']:
-            similarities = self.find_similar_servers(args)
-            if 'name' in similarities:
-                return "There's already a server with that name, try another"
-            if 'address' in similarities:
-                if not confirm("A server exists with the same address. Add this one too?"):
-                    return 'Server not added'
-
             server = self.new_server(args)
-            self.servers.append(server)
+            self.add_server(server)
             self.save()
             return server['name'] + ' added'
 
