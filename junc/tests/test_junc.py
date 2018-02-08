@@ -64,6 +64,30 @@ class TestJunc(unittest.TestCase):
             assert item in server.keys()
             assert type(server[item]) is str
 
+    def test_add_server_CLI(self):
+        old_length = len(self.junc.servers)
+        args = docopt(doc, ['add', 'server-name', 'username', '123.456.789', 'Pytest :)'])
+        self.junc.what_to_do_with(args)
+        assert len(self.junc.servers) == old_length + 1
+
+
+
+    def test_add_server_directly(self):
+        """
+        Uses the add_server() method, not through the CLI
+        """
+        old_length = len(self.junc.servers)
+        new_server = {
+            "name": "another_server",
+            "ip": "192.168.0.169",
+            "username": "username",
+            "location": "Pytest :)"
+        }
+
+        self.junc.add_server(new_server)
+        assert len(self.junc.servers) == old_length + 1
+
+
     def test_remove_server(self):
         servers = [
             {
@@ -129,10 +153,9 @@ class TestJunc(unittest.TestCase):
 
     def test_similarities(self):
         new_server = {
-            "name": "brewpi-prod", # This name exists in the seed data
+            "name": "brewpi-prod",  # This name exists in the seed data
             "ip": "192.168.0.169",
             "username": "pi",      # So does this username + ip combination
             "location": "Pytest :)"
         }
-
         assert self.junc.find_similar_server(new_server) == ['name', 'address']

@@ -35,7 +35,7 @@ try:
 except ImportError:
     from .storage import Storage
 
-def confirm(message): # pragma: no cover
+def confirm(message="Sure? "): # pragma: no cover
     while True:
         choice = input(message + ' [y/n]: ')
         if choice.upper() == 'Y':
@@ -74,7 +74,7 @@ class Junc(object):
         """
         Checks for similarities
         """
-        similarities = self.find_similar_servers(server)
+        similarities = self.find_similar_server(server)
         if 'name' in similarities:
             return "There's already a server with that name, try another"
         if 'address' in similarities:
