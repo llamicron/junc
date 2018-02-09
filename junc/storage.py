@@ -6,8 +6,7 @@ from terminaltables import AsciiTable
 
 from .server import Server
 
-
-class Storage():
+class Storage(object):
     """
     Handles storing and retrieving of server data
     """
@@ -42,10 +41,9 @@ class Storage():
     def get_servers(self):
         try:
             servers = []
-            server_data = json.loads(open(self.file_path, 'r').read())
-            for server in server_data:
-                new_server = Server(server)
-                servers.append(new_server)
+            loaded = json.loads(open(self.file_path, 'r').read())
+            for attrs in loaded:
+                servers.append(Server(attrs))
             return servers
         except ValueError:
             return []

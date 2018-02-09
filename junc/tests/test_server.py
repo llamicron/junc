@@ -3,7 +3,6 @@ import unittest
 from ..server import Server
 
 class TestServer(unittest.TestCase):
-
     def test_username_validation(self):
         with self.assertRaises(ValueError):
             Server.validate_username("username_with_@_in_it")
@@ -31,3 +30,15 @@ class TestServer(unittest.TestCase):
         assert type(ser1) is Server
         ser2 = Server(ser1.__dict__)
         assert type(ser2) is Server
+
+    def test_name_validation(self):
+        other_servers = [
+            Server({
+                'name': 'taken',
+                'ip': '123.345.456',
+                'username': 'valid',
+                'location': 'Pytest :)'
+            })
+        ]
+
+        # Server.validate_name('taken', other_servers)

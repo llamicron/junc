@@ -2,7 +2,11 @@ import re
 
 class Server(object):
 
-    def __init__(self, server_dict):
+    def __init__(self, server_dict, testing = False):
+        # This needs to be imported here because python is stupid
+        # Or maybe it's me... Nah it's def python
+        # from .storage import Storage
+
         self.name = server_dict['name']
         self.username = server_dict['username']
         self.ip = server_dict['ip']
@@ -12,6 +16,16 @@ class Server(object):
 
     def validate(self):
         Server.validate_username(self.username)
+        Server.validate_ip(self.ip)
+        Server.validate_name(self.name)
+
+    @staticmethod
+    def validate_name(name):
+        if not name:
+            raise ValueError("Provide a name")
+        # for server in other_names:
+        #     if server.name == name:
+        #         raise ValueError("Name (%s) taken, try another" % name)
 
     @staticmethod
     def validate_username(username):

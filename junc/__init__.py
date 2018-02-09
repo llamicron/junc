@@ -51,6 +51,7 @@ class Junc(object):
     def __init__(self, testing=False):
         self.st = Storage(testing=testing)
 
+        self.servers = []
         self.get_servers()
 
     def get_servers(self):
