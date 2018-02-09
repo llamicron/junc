@@ -1,31 +1,36 @@
 import unittest
-import shutil, tempfile, os
+import shutil
+import tempfile
+import os
 
 from terminaltables import AsciiTable
 
+from ..server import Server
 from ..storage import Storage
+
 
 def file_empty(file):
     return not bool(os.path.getsize(file))
 
+
 class TestStorage(unittest.TestCase):
     def setUp(self):
         self.sv_list = [
-            {
-                "username": "pi",
-                "ip": "192.168.0.134",
-                "name": "sween",
-                "location": "Dining Room"
-            },
-            {
-                "username": "pi",
-                "ip": "192.168.0.169",
-                "name": "brewpi-prod",
-                "location": "Brew Rig"
-            }
+            Server({
+                'name': 'sween',
+                'username': 'pi',
+                'ip': '192.168.0.134',
+                'location': 'Dining Room'
+            }),
+            Server({
+                'name': 'brewpi-prod',
+                'username': 'pi',
+                'ip': '192.168.0.169',
+                'location': 'Brew Rig'
+            })
         ]
         self.temp_dir = tempfile.mkdtemp()
-        self.st = Storage(testing = True)
+        self.st = Storage(testing=True)
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
@@ -63,7 +68,7 @@ class TestStorage(unittest.TestCase):
         assert not file_empty(self.st.file_path)
 
         server_list = self.st.get_servers()
-        assert server_list == self.sv_list
+        assert type(server_list[0]) is Server
 
     def test_backup(self):
         backup_file = self.st.file_path + '.bak'
@@ -82,9 +87,3 @@ class TestStorage(unittest.TestCase):
         assert not os.path.isfile(self.st.file_path)
         self.st.restore()
         assert os.path.isfile(self.st.file_path)
-
-
-
-
-
-

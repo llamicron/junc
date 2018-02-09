@@ -4,12 +4,15 @@ import os
 
 from terminaltables import AsciiTable
 
+from .server import Server
+
 
 class Storage():
     """
     Handles storing and retrieving of server data
     """
-    def __init__(self, testing = False):
+
+    def __init__(self, testing=False):
         self.file_path = os.path.join(os.path.expanduser("~"), ".junc.json")
         if testing:
             self.file_path += '.test'
@@ -31,11 +34,19 @@ class Storage():
         Writes a whole server list to the storage file
         """
         with open(self.file_path, 'w') as f:
-            json.dump(server_list, f, indent=4)
+            json_data = []
+            for server in server_list:
+                json_data.append(server.__dict__)
+            json.dump(json_data, f, indent=4)
 
     def get_servers(self):
         try:
-            return json.loads(open(self.file_path, 'r').read())
+            servers = []
+            server_data = json.loads(open(self.file_path, 'r').read())
+            for server in server_data:
+                new_server = Server(server)
+                servers.append(new_server)
+            return servers
         except ValueError:
             return []
 

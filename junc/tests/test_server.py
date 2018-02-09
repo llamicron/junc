@@ -19,3 +19,15 @@ class TestServer(unittest.TestCase):
         # I check that it's not an empty string
         with self.assertRaises(ValueError):
             Server.validate_ip('')
+
+    def test_serialize_server_to_another(self):
+        ser1 = Server({
+            'name': 'sween',
+            'username': 'pi',
+            'ip': '192.168.0.134',
+            'location': 'Dining Room'
+        })
+        print(ser1)
+        assert type(ser1) is Server
+        ser2 = Server(ser1.__dict__)
+        assert type(ser2) is Server

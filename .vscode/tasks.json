@@ -4,7 +4,6 @@
       "label": "test",
       "command": "pytest",
       "args": [
-        "junc/tests/test_server.py",
         "--cov=junc/",
         "--cov-report=html",
       ],

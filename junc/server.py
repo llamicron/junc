@@ -2,11 +2,11 @@ import re
 
 class Server(object):
 
-    def __init__(self, name, username, ip, location=""):
-        self.name = name
-        self.username = username
-        self.ip = ip
-        self.location = location
+    def __init__(self, server_dict):
+        self.name = server_dict['name']
+        self.username = server_dict['username']
+        self.ip = server_dict['ip']
+        self.location = server_dict['location']
 
         self.validate()
 

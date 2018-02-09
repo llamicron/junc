@@ -32,8 +32,10 @@ from terminaltables import AsciiTable
 
 try:
     from storage import Storage
+    from server import Server
 except ImportError:
     from .storage import Storage
+    from .server import Server
 
 def confirm(message="Sure? "): # pragma: no cover
     while True:
@@ -64,9 +66,11 @@ class Junc(object):
         """
         similarities = []
         for server in self.servers:
-            if server['name'] == compare['name']:
+            print(server)
+            print(compare)
+            if server.name == compare.name:
                 similarities.append('name')
-            if server['username'] == compare['username'] and server['ip'] == compare['ip']:
+            if server.username == compare.username and server.ip == compare.ip:
                 similarities.append('address')
         return similarities
 
@@ -94,7 +98,7 @@ class Junc(object):
             server = self.new_server(args)
             self.add_server(server)
             self.save()
-            return server['name'] + ' added'
+            return server.name + ' added'
 
         if args['remove']:
             if self.remove(args['<name>']):
@@ -114,7 +118,7 @@ class Junc(object):
 
     def remove(self, name):
         for i in range(len(self.servers)):
-            if self.servers[i]['name'] == name:
+            if self.servers[i].name == name:
                 del self.servers[i]
                 self.save()
                 return True
@@ -124,7 +128,10 @@ class Junc(object):
 
     def list_servers(self, raw=False):
         if raw:
-            return json.dumps(self.servers)
+            data = []
+            for server in self.servers:
+                data.append(server.__dict__)
+            return json.dumps(data)
         else:
             return self.get_server_table()
 
@@ -134,7 +141,7 @@ class Junc(object):
         new_server = {}
         for attr in attrs:
             new_server[attr[1:-1]] = args[attr]
-        return new_server
+        return Server(new_server)
 
     def get_server_table(self):
         """
@@ -148,7 +155,7 @@ class Junc(object):
         else:
             for server in self.servers:
                 table_data.append(
-                    [server['name'], server['username'] + "@" + server['ip'], server['location']])
+                    [server.name, server.username + "@" + server.ip, server.location])
         return AsciiTable(table_data)
 
     def connect(self, name):
