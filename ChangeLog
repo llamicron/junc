@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Even more unit tests
+* Adds some unit tests
 * Adds appveyor badge to readme
 * Restoring old appveyor.yml
 * Trying out a new appveyor.yml file

@@ -1,45 +1,12 @@
 {
   "tasks": [
     {
-      "taskName": "build",
-      "command": "make",
-      "suppressTaskName": true,
-      "args": [
-        "build"
-      ]
-    },
-    {
-      "taskName": "clean",
-      "command": "make",
-      "suppressTaskName": true,
-      "args": [
-        "clean"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "taskName": "upload",
-      "command": "make",
-      "suppressTaskName": true,
-      "args": [
-        "upload"
-      ]
-    },
-    {
-      "taskName": "install",
-      "command": "make",
-      "suppressTaskName": true,
-      "args": [
-        "install"
-      ],
-      "problemMatcher": []
-    },
-    {
       "label": "test",
       "command": "pytest",
       "args": [
+        "junc/tests/test_server.py",
         "--cov=junc/",
-        "--cov-report=html"
+        "--cov-report=html",
       ],
       "group": {
         "kind": "test",
