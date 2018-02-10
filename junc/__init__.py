@@ -32,10 +32,10 @@ from terminaltables import AsciiTable
 
 try:
     from storage import Storage
-    from server import Server
+    from server import ServerList
 except ImportError:
     from .storage import Storage
-    from .server import Server
+    from .server import ServerList
 
 def confirm(message="Sure? "): # pragma: no cover
     while True:
@@ -49,61 +49,34 @@ def confirm(message="Sure? "): # pragma: no cover
 
 class Junc(object):
     def __init__(self, testing=False):
-        self.st = Storage(testing=testing)
-
-        self.servers = []
-        self.get_servers()
-
-    def get_servers(self):
-        self.servers = self.st.get_servers()
-
-    def save(self):
-        self.st.write(self.servers)
-
-    def find_similar_server(self, compare):
-        """
-        Returns a list of similarities between input and servers, so there won't be any duplicate servers
-        If the name or address (username + ip) of a server is the same
-        """
-        similarities = []
-        for server in self.servers:
-            print(server)
-            print(compare)
-            if server.name == compare.name:
-                similarities.append('name')
-            if server.username == compare.username and server.ip == compare.ip:
-                similarities.append('address')
-        return similarities
-
-    def add_server(self, server):
-        """
-        Checks for similarities
-        """
-        similarities = self.find_similar_server(server)
-        if 'name' in similarities:
-            return "There's already a server with that name, try another"
-        if 'address' in similarities:
-            if not confirm("A server exists with the same address. Add this one too?"):
-                return 'Server not added'
-
-        self.servers.append(server)
+        self.st = Storage(testing = testing)
+        self.sl = ServerList(testing = testing)
 
     def what_to_do_with(self, args):
         """
         Inteprets the docopt argument vector and does something cool with it
         """
         if args['list']:
-            return self.list_servers(raw=args['--json'])
+            if args['--json']:
+                data = []
+                for server in self.sl.servers:
+                    data.append(server.__dict__)
+                return json.dumps(data)
+            else:
+                return self.sl.table()
 
         if args['add']:
-            server = self.new_server(args)
-            self.add_server(server)
-            self.save()
+            self.sl.add(_Server({
+                'name': args['<name>'],
+                'ip': args['<ip>'],
+                'username': args['<username>'],
+                'location': args['<location>']
+            }))
+            self.sl.save()
             return server.name + ' added'
 
         if args['remove']:
-            if self.remove(args['<name>']):
-                return args['<name>'] + ' removed'
+            self.sl.remove(args['<name>'])
             return ''
 
         if args['connect']:
@@ -116,48 +89,6 @@ class Junc(object):
         if args['restore']:
             self.st.restore(args['<file>'])
             return ''
-
-    def remove(self, name):
-        for i in range(len(self.servers)):
-            if self.servers[i].name == name:
-                del self.servers[i]
-                self.save()
-                return True
-            if i == len(self.servers) - 1:
-                print("Couldn't find that server...")
-                return False
-
-    def list_servers(self, raw=False):
-        if raw:
-            data = []
-            for server in self.servers:
-                data.append(server.__dict__)
-            return json.dumps(data)
-        else:
-            return self.get_server_table()
-
-    def new_server(self, args):
-        # Don't have to validate, docopt does that for us
-        attrs = ['<ip>', '<username>', '<name>', '<location>']
-        new_server = {}
-        for attr in attrs:
-            new_server[attr[1:-1]] = args[attr]
-        return Server(new_server)
-
-    def get_server_table(self):
-        """
-        Gets all the servers and plops them into a terminal table
-        """
-        table_data = [
-            ['Name', "Address", "Location"],
-        ]
-        if not self.servers:
-            table_data.append(["No Servers yet :(\nAdd some!"])
-        else:
-            for server in self.servers:
-                table_data.append(
-                    [server.name, server.username + "@" + server.ip, server.location])
-        return AsciiTable(table_data)
 
     def connect(self, name):
         connection = ''

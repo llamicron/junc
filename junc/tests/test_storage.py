@@ -5,7 +5,7 @@ import os
 
 from terminaltables import AsciiTable
 
-from ..server import Server
+from ..server import _Server
 from ..storage import Storage
 
 
@@ -16,13 +16,13 @@ def file_empty(file):
 class TestStorage(unittest.TestCase):
     def setUp(self):
         self.sv_list = [
-            Server({
+            _Server({
                 'name': 'sween',
                 'username': 'pi',
                 'ip': '192.168.0.134',
                 'location': 'Dining Room'
             }),
-            Server({
+            _Server({
                 'name': 'brewpi-prod',
                 'username': 'pi',
                 'ip': '192.168.0.169',
@@ -68,7 +68,6 @@ class TestStorage(unittest.TestCase):
         assert not file_empty(self.st.file_path)
 
         server_list = self.st.get_servers()
-        assert type(server_list[0]) is Server
 
     def test_backup(self):
         backup_file = self.st.file_path + '.bak'
