@@ -54,16 +54,11 @@ class Junc(object):
 
     def what_to_do_with(self, args):
         """
-        Inteprets the docopt argument vector and does something cool with it
+        Inteprets the docopt argument vector and does something cool with it.
+        Returns what will be printed to the console after the command is run.
         """
         if args['list']:
-            if args['--json']:
-                data = []
-                for server in self.sl.servers:
-                    data.append(server.__dict__)
-                return json.dumps(data)
-            else:
-                return self.sl.table()
+            return self.sl.as_json() if args['--json'] else self.sl.table()
 
         if args['add']:
             self.sl.add({
@@ -77,7 +72,7 @@ class Junc(object):
 
         if args['remove']:
             self.sl.remove(args['<name>'])
-            return ''
+            return args['<name>'] + ' removed'
 
         if args['connect']:
             self.connect(args['<name>'])
@@ -104,11 +99,20 @@ class Junc(object):
 def main():
     args = docopt(__doc__)
     junc = Junc(testing = args['--debug'])
-    results = junc.what_to_do_with(args)
-    if type(results) is AsciiTable:
-        print(results.table)
-    else:
-        print(results)
+    try:
+        results = junc.what_to_do_with(args)
+        if type(results) is AsciiTable:
+            print(results.table)
+        else:
+            print(results)
+    except Exception as mess: # This makes me cringe
+        # Unless we're debugging...
+        if args['--debug']:
+            raise
+        # Print the message of the exception, not the full error
+        # More user friendly
+        print(mess)
+
 
 if __name__ == '__main__':
     main()

@@ -1,4 +1,5 @@
 import re
+import json
 
 from terminaltables import AsciiTable
 
@@ -61,6 +62,15 @@ class ServerList(object):
         for server in self.servers:
             table_data.append([server.name, server.username + "@" + server.ip, server.location])
         return AsciiTable(table_data)
+
+    def as_json(self):
+        """
+        Returns the server list in json format
+        """
+        server_data = []
+        for server in self.servers:
+            server_data.append(server.__dict__)
+        return json.dumps(server_data)
 
     # Validation Methods
     def validate(self, server):
