@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+2.1.0
+-----
+
+* Adds os tag to travis.yml
+* Fixes a type error in python 2.7
 * Basically finished tests for junc
 * Starts rewrite of test\_junc.py
 * Makes test\_server.py not useless
