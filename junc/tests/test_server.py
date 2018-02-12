@@ -3,14 +3,28 @@ import unittest
 from ..server import _Server
 
 class TestServer(unittest.TestCase):
-    def test_serialize_server_to_another(self):
-        ser1 = _Server({
-            'name': 'sween',
-            'username': 'pi',
-            'ip': '192.168.0.134',
-            'location': 'Dining Room'
-        })
-        print(ser1)
-        assert type(ser1) is _Server
-        ser2 = _Server(ser1.__dict__)
-        assert type(ser2) is _Server
+    """
+    The _Server class can't really do anything, it's just a place to store data.
+    Will probably be expanded in the future. Right now it's a shell.
+    """
+    def test_make_one(self):
+        server_deets = {
+            'name': 'a_valid_name',
+            'username': 'a_valid_username',
+            'ip': '123.456.789',
+            'location': 'Pytest :)'
+        }
+        server = _Server(server_deets)
+        assert type(server) is _Server
+
+    def test_serialize(self):
+        server_deets = {
+            'name': 'a_valid_name',
+            'username': 'a_valid_username',
+            'ip': '123.456.789',
+            'location': 'Pytest :)'
+        }
+        server = _Server(server_deets)
+        server.extra = 'some extra data that we dont really care about'
+        for key in server_deets:
+            assert key in server.__dict__.keys()
