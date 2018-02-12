@@ -75,6 +75,10 @@ class TestServerList(unittest.TestCase):
         self.sl.remove('sween')
         assert len(self.sl.servers) == old_size - 1
 
+        # I ran into this bug, added some tests to make sure it doesn't happen again
+        refreshed = self.sl.get()
+        assert 'sween' not in [ser.name for ser in refreshed]
+
     def test_write(self):
         file_path = Storage(testing = True).file_path
         assert os.path.getsize(file_path) > 0

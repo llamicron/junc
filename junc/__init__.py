@@ -22,6 +22,8 @@ Arguments:
 Notes:
     Data is stored in ~/.junc.json
     Default backup location is ~/.junc.json.bak
+
+    You need to have 'ssh' installed on your system.
 """
 
 import os
@@ -89,7 +91,7 @@ class Junc(object):
         connection = ''
         for server in self.sl.servers:
             if server.name == name:
-                connection = server.username + '@' + server.ip
+                connection = server.address()
         if not connection:
             return "Couldn't find that server..."
         print('Connecting...')
@@ -112,7 +114,6 @@ def main():
         # Print the message of the exception, not the full error
         # More user friendly
         print(mess)
-
 
 if __name__ == '__main__':
     main()

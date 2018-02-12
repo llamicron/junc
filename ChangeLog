@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+2.1.1
+-----
+
+* Connection hotfix
+* Removes osx from os list for travis
+
 2.1.0
 -----
 

@@ -21,6 +21,9 @@ class _Server(object):
         self.ip = server_dict['ip']
         self.location = server_dict['location']
 
+    def address(self):
+        return self.username + "@" + self.ip
+
 class ServerList(object):
     """
     Keeps a list of servers (_Server objects, see above) and provides an easy way to add, remove, validate, etc.
@@ -51,9 +54,9 @@ class ServerList(object):
         for i in range(len(self.servers)):
             if name == self.servers[i].name:
                 del self.servers[i]
+                self.save()
                 return True
         raise ValueError('Server not found: ' + name)
-        self.save()
 
     def save(self):
         self.st.write(self.servers)

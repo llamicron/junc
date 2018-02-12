@@ -28,3 +28,12 @@ class TestServer(unittest.TestCase):
         server.extra = 'some extra data that we dont really care about'
         for key in server_deets:
             assert key in server.__dict__.keys()
+
+    def test_address(self):
+        server = _Server({
+            'name': 'doesntmatter',
+            'username': 'luke',
+            'ip': '123.456.789',
+            'location': 'Pytest :)'
+        })
+        assert server.address() == server.username + "@" + server.ip
