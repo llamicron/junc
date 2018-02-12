@@ -25,7 +25,6 @@ Notes:
 """
 
 import os
-import sys
 import json
 
 from docopt import docopt
