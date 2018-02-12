@@ -87,9 +87,9 @@ class Junc(object):
 
     def connect(self, name):
         connection = ''
-        for server in self.servers:
-            if server['name'] == name:
-                connection = server['username'] + '@' + server['ip']
+        for server in self.sl.servers:
+            if server.name == name:
+                connection = server.username + '@' + server.ip
         if not connection:
             return "Couldn't find that server..."
         print('Connecting...')
