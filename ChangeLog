@@ -1,6 +1,16 @@
 CHANGES
 =======
 
+* Basically finished tests for junc
+* Starts rewrite of test\_junc.py
+* Makes test\_server.py not useless
+* This old rusty ship may sail again one day..
+* Removes an unwanted sys import
+* Working?
+* Big ole rewrite
+* Fixes a recursion error
+* Tests passing, needs review
+* Adds basic Server class
 * Even more unit tests
 * Adds some unit tests
 * Adds appveyor badge to readme

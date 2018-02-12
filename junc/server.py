@@ -91,7 +91,8 @@ class ServerList(object):
             raise ValidationError("_Server object needs to be given to ServerList.add() You gave me: " + type(server))
 
     def validate_name(self, name):
-        assert type(name) is str
+        if type(name) is not str:
+            raise ValidationError("Name needs to be a string, you gave me: " + str(type(name)))
         for server in self.servers:
             if name == server.name:
                 raise ValidationError("Name '" + name + "' taken, try another")

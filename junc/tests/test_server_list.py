@@ -4,7 +4,7 @@ import json
 
 from terminaltables import AsciiTable
 
-from ..server import _Server, ServerList
+from ..server import _Server, ServerList, ValidationError
 from ..storage import Storage
 
 class TestServerList(unittest.TestCase):
@@ -95,7 +95,7 @@ class TestServerList(unittest.TestCase):
     def test_name_validation(self):
         # Get a name thats already in use
         name = self.sl.servers[0].name
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.sl.validate_name(name)
 
     def test_server_list_as_json(self):
