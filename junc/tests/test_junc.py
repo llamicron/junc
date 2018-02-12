@@ -13,8 +13,14 @@ class TestJunc(unittest.TestCase):
         self.junc = Junc(testing = True)
 
     def tearDown(self):
-        if os.path.isfile(self.junc.st.file_path):
-            os.remove(self.junc.st.file_path)
+        files = [
+            self.junc.st.file_path,
+            self.junc.st.file_path + '.bak',
+            self.junc.st.file_path + '.custom_backup'
+        ]
+        for fi in files:
+            if os.path.isfile(fi):
+                os.remove(fi)
 
     def seed(self):
         """
@@ -81,3 +87,69 @@ class TestJunc(unittest.TestCase):
         with self.assertRaises(ValueError):
             args = docopt(doc, ['remove', 'not_a_server'])
             self.junc.what_to_do_with(args)
+
+    def test_bacup(self):
+        base_file = self.junc.st.file_path
+        backup_file = base_file + '.bak'
+
+        assert os.path.isfile(base_file)
+        assert not os.path.isfile(backup_file)
+
+        args = docopt(doc, ['backup'])
+        self.junc.what_to_do_with(args)
+
+        assert os.path.isfile(base_file)
+        assert os.path.isfile(backup_file)
+
+    def test_backup_to_custom_location(self):
+        base_file = self.junc.st.file_path
+        backup_file = base_file + '.custom_backup'
+
+        assert os.path.isfile(base_file)
+        assert not os.path.isfile(backup_file)
+
+        args = docopt(doc, ['backup', backup_file])
+        self.junc.what_to_do_with(args)
+
+        assert os.path.isfile(base_file)
+        assert os.path.isfile(backup_file)
+
+    def test_restore(self):
+        base_file = self.junc.st.file_path
+        backup_file = base_file + '.bak'
+
+        assert os.path.isfile(base_file)
+        assert not os.path.isfile(backup_file)
+
+        args = docopt(doc, ['backup'])
+        self.junc.what_to_do_with(args)
+
+        os.remove(base_file)
+
+        assert not os.path.isfile(base_file)
+        assert os.path.isfile(backup_file)
+
+        args = docopt(doc, ['restore'])
+        self.junc.what_to_do_with(args)
+
+        assert os.path.isfile(base_file)
+
+    def test_restore_from_custom_location(self):
+        base_file = self.junc.st.file_path
+        backup_file = base_file + '.custom_backup'
+
+        assert os.path.isfile(base_file)
+        assert not os.path.isfile(backup_file)
+
+        args = docopt(doc, ['backup', backup_file])
+        self.junc.what_to_do_with(args)
+
+        os.remove(base_file)
+
+        assert not os.path.isfile(base_file)
+        assert os.path.isfile(backup_file)
+
+        args = docopt(doc, ['restore', backup_file])
+        self.junc.what_to_do_with(args)
+
+        assert os.path.isfile(base_file)

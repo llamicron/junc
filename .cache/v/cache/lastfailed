@@ -6,7 +6,6 @@
   "junc/tests/test_junc.py::TestJunc::test_list_servers": true,
   "junc/tests/test_junc.py::TestJunc::test_new_server": true,
   "junc/tests/test_junc.py::TestJunc::test_remove_server": true,
-  "junc/tests/test_junc.py::TestJunc::test_restore": true,
   "junc/tests/test_junc.py::TestJunc::test_server_table": true,
   "junc/tests/test_junc.py::TestJunc::test_similarities": true,
   "junc/tests/test_junc.py::test_new_server": true,
