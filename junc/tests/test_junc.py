@@ -1,155 +1,83 @@
-# import unittest
-# from os import remove
-# from os.path import isfile, join, expanduser
-# import json
+import unittest
+import json
+import os
 
-# from docopt import docopt
-# from terminaltables import AsciiTable
+from docopt import docopt
+from terminaltables import AsciiTable
 
-# from ..server import _Server
-# from .. import Junc, __doc__ as doc
+from .. import Junc, __doc__ as doc
+from .. server import ValidationError
 
-# class TestJunc(unittest.TestCase):
-#     def setUp(self):
-#         self.junc = Junc(testing = True)
-#         self.seed_test_file()
-#         self.junc.get_servers()
+class TestJunc(unittest.TestCase):
+    def setUp(self):
+        self.junc = Junc(testing = True)
 
-#     def tearDown(self):
-#         # Files that may be created during testing
-#         base_path = join(expanduser('~'), '.junc.json.test')
-#         files = [
-#             base_path,
-#             base_path + '.bak',
-#             base_path + '.custom_bak',
-#         ]
-#         for fi in files:
-#             if isfile(fi):
-#                 remove(fi)
+    def tearDown(self):
+        if os.path.isfile(self.junc.st.file_path):
+            os.remove(self.junc.st.file_path)
 
-#     def seed_test_file(self):
-#         servers = [
-#             _Server({
-#                 "username": "pi",
-#                 "ip": "192.168.0.134",
-#                 "name": "sween",
-#                 "location": "Dining Room"
-#             }),
-#             _Server({
-#                 "username": "pi",
-#                 "ip": "192.168.0.169",
-#                 "name": "brewpi-prod",
-#                 "location": "Brew Rig"
-#             })
-#         ]
-#         self.junc.st.write(servers)
+    def seed(self):
+        """
+        Adds 2 servers to the server list
+        """
+        servers = [
+            {
+                'name': 'a_valid_name',
+                'username': 'a_valid_username',
+                'ip': '123.456.789',
+                'location': 'Pytest :)'
+            },
+            {
+                'name': 'another_valid_name',
+                'username': 'a_not_short_username',
+                'ip': '321.654.987',
+                'location': 'Pytest :)'
+            }
+        ]
+        for server in servers:
+            self.junc.sl.add(server)
+        assert len(self.junc.sl.servers) == 2
 
-#     def test_list_servers(self):
-#         args = docopt(doc, ['list'])
-#         results = self.junc.what_to_do_with(args)
+    def test_list(self):
+        self.seed()
+        args = docopt(doc, ['list'])
+        results = self.junc.what_to_do_with(args)
+        assert type(results) is AsciiTable
 
-#         assert type(results) is AsciiTable
+        args = docopt(doc, ['list', '--json'])
+        results = self.junc.what_to_do_with(args)
+        assert type(results) is str
+        assert json.loads(results)
 
-#         args = docopt(doc, ['list', '--json'])
-#         results = self.junc.what_to_do_with(args)
+    def test_add(self):
+        self.seed()
 
-#         print(results)
-#         assert type(results) is str
+        old_size = len(self.junc.sl.servers)
 
-#     def test_new_server(self):
-#         args = docopt(doc, ['add', 'server-name', 'username', '123.456.789', 'right here'])
-#         server = self.junc.new_server(args)
-#         assert type(server) is _Server
+        args = docopt(doc, ['add', 'server_name', 'username', '123.456', 'Pytest :)'])
+        results = self.junc.what_to_do_with(args)
 
-#     def test_add_server_CLI(self):
-#         old_length = len(self.junc.servers)
-#         args = docopt(doc, ['add', 'server-name', 'username', '123.456.789', 'Pytest :)'])
-#         self.junc.what_to_do_with(args)
-#         assert len(self.junc.servers) == old_length + 1
+        assert results == 'server_name added'
+        assert len(self.junc.sl.servers) == old_size + 1
 
-#     def test_add_server_directly(self):
-#         """
-#         Uses the add_server() method, not through the CLI
-#         """
-#         old_length = len(self.junc.servers)
-#         new_server = _Server({
-#             "name": "another_server",
-#             "ip": "192.168.0.169",
-#             "username": "username",
-#             "location": "Pytest :)"
-#         })
+        with self.assertRaises(ValidationError):
+            args = docopt(doc, ['add', 'valid_name', 'not@a%valid&username', '123', ''])
+            self.junc.what_to_do_with(args)
 
-#         self.junc.add_server(new_server)
-#         assert len(self.junc.servers) == old_length + 1
+            args = docopt(doc, ['add', '', 'valid_username', '', ''])
+            self.junc.what_to_do_with(args)
 
-#     def test_remove_server(self):
-#         servers = [
-#             _Server({
-#                 'name': 'to_remove',
-#                 'ip': '19213.1235',
-#                 'username': 'doesnt_matter',
-#                 'location': 'this really doesnt matter'
-#             }),
-#             _Server({
-#                 'name': 'anotherone',
-#                 'ip': '19213.1235',
-#                 'username': 'doesnt_matter',
-#                 'location': 'this really doesnt matter'
-#             })
-#         ]
-#         self.junc.servers = servers
-#         self.junc.save()
-#         old_size = len(self.junc.st.get_servers())
-#         args = docopt(doc, ['remove', 'to_remove'])
-#         self.junc.what_to_do_with(args)
+    def test_remove(self):
+        self.seed()
 
-#         assert len(self.junc.st.get_servers()) == old_size - 1
+        old_size = len(self.junc.sl.servers)
 
-#     def test_backup_and_restore_with_custom_location(self):
-#         fi = self.junc.st.file_path
-#         custom_fi = fi + '.custom_bak'
+        in_use_server_name = self.junc.sl.servers[0].name
+        args = docopt(doc, ['remove', in_use_server_name])
+        self.junc.what_to_do_with(args)
 
-#         assert isfile(fi)
-#         assert not isfile(custom_fi)
+        assert len(self.junc.sl.servers) == old_size - 1
 
-#         args = docopt(doc, ['backup', custom_fi])
-#         self.junc.what_to_do_with(args)
-
-#         assert isfile(custom_fi)
-#         remove(fi)
-#         assert not isfile(fi)
-
-#         args = docopt(doc, ['restore', custom_fi])
-#         self.junc.what_to_do_with(args)
-
-#         assert isfile(custom_fi)
-#         assert isfile(fi)
-
-#     def test_restore(self):
-#         fi = self.junc.st.file_path
-
-#         assert not isfile(fi + '.bak')
-
-#         args = docopt(doc, ['backup'])
-#         self.junc.what_to_do_with(args)
-
-#         assert isfile(fi)
-#         assert isfile(fi + '.bak')
-
-#         remove(fi)
-#         assert not isfile(fi)
-
-#         args = docopt(doc, ['restore'])
-#         self.junc.what_to_do_with(args)
-
-#         assert isfile(fi)
-#         assert isfile(fi + '.bak')
-
-#     def test_similarities(self):
-#         new_server = _Server({
-#             "name": "brewpi-prod",  # This name exists in the seed data
-#             "ip": "192.168.0.169",
-#             "username": "pi",      # So does this username + ip combination
-#             "location": "Pytest :)"
-#         })
-#         assert self.junc.find_similar_server(new_server) == ['name', 'address']
+        with self.assertRaises(ValueError):
+            args = docopt(doc, ['remove', 'not_a_server'])
+            self.junc.what_to_do_with(args)

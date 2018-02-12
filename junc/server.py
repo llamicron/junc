@@ -8,6 +8,9 @@ try:
 except ImportError:
     from .storage import Storage
 
+class ValidationError(ValueError):
+    pass
+
 class _Server(object):
     """
     Just stores some data
@@ -55,7 +58,7 @@ class ServerList(object):
     def save(self):
         self.st.write(self.servers)
 
-    def table(self):
+    def as_table(self):
         table_data = [
             ['Name', 'Address', 'Location']
         ]
@@ -76,7 +79,7 @@ class ServerList(object):
     def validate(self, server):
         """
         This just runs all the other validation methods, so you just call server_list.validate(server)
-        Raises an exception if anything goes wrong.
+        Raises a ValidationError if anything goes wrong.
         """
         self.validate_type(server)
         self.validate_name(server.name)
@@ -85,19 +88,19 @@ class ServerList(object):
 
     def validate_type(self, server):
         if type(server) is not _Server:
-            raise ValueError("_Server object needs to be given to ServerList.add() You gave me: " + type(server))
+            raise ValidationError("_Server object needs to be given to ServerList.add() You gave me: " + type(server))
 
     def validate_name(self, name):
         assert type(name) is str
         for server in self.servers:
             if name == server.name:
-                raise ValueError("Name '" + name + "' taken, try another")
+                raise ValidationError("Name '" + name + "' taken, try another")
 
     def validate_username(self, username):
         pattern = r'^[a-z][-a-z0-9_]*'
         leftovers = re.sub(pattern, '', username)
         if leftovers:
-            raise ValueError("Found character not allowed in usernames: " + leftovers[0])
+            raise ValidationError("Found character not allowed in usernames: " + leftovers[0])
 
     def validate_ip(self, ip):
         """
@@ -106,4 +109,4 @@ class ServerList(object):
         or https://us-west-2.console.aws.amazon.com/elasticbeanstalk/home?region=us-west-2#/environment/dashboard?applicationName=somethinghere&environmentId=e-234h8df
         """
         if not ip:
-            raise ValueError("Please provide an actual IP or web address. You gave me: " + ip)
+            raise ValidationError("Please provide an actual IP or web address. You gave me: " + ip)

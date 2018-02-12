@@ -1,5 +1,6 @@
 import unittest
 import os
+import json
 
 from terminaltables import AsciiTable
 
@@ -89,10 +90,13 @@ class TestServerList(unittest.TestCase):
         assert os.path.getsize(file_path) > 0
 
     def test_server_table(self):
-        assert type(self.sl.table()) is AsciiTable
+        assert type(self.sl.as_table()) is AsciiTable
 
     def test_name_validation(self):
         # Get a name thats already in use
         name = self.sl.servers[0].name
         with self.assertRaises(ValueError):
             self.sl.validate_name(name)
+
+    def test_server_list_as_json(self):
+        assert json.loads(self.sl.as_json())

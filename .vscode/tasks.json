@@ -6,6 +6,7 @@
       "args": [
         "--cov=junc/",
         "--cov-report=html",
+        "junc/tests/test_junc.py"
       ],
       "group": {
         "kind": "test",

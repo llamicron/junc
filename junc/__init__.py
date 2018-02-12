@@ -58,7 +58,7 @@ class Junc(object):
         Returns what will be printed to the console after the command is run.
         """
         if args['list']:
-            return self.sl.as_json() if args['--json'] else self.sl.table()
+            return self.sl.as_json() if args['--json'] else self.sl.as_table()
 
         if args['add']:
             self.sl.add({
