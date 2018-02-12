@@ -12,7 +12,6 @@ from ..storage import Storage
 def file_empty(file):
     return not bool(os.path.getsize(file))
 
-
 class TestStorage(unittest.TestCase):
     def setUp(self):
         self.sv_list = [

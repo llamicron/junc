@@ -82,7 +82,6 @@
 #         self.junc.add_server(new_server)
 #         assert len(self.junc.servers) == old_length + 1
 
-
 #     def test_remove_server(self):
 #         servers = [
 #             _Server({

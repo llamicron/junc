@@ -2,21 +2,25 @@ import re
 
 from terminaltables import AsciiTable
 
-from .storage import Storage
+try:
+    from storage import Storage
+except ImportError:
+    from .storage import Storage
 
 class _Server(object):
-
+    """
+    Just stores some data
+    """
     def __init__(self, server_dict, testing = False):
-        # This needs to be imported here because python is stupid
-        # Or maybe it's me... Nah it's def python
-        # from .storage import Storage
         self.name = server_dict['name']
         self.username = server_dict['username']
         self.ip = server_dict['ip']
         self.location = server_dict['location']
 
-
 class ServerList(object):
+    """
+    Keeps a list of servers (_Server objects, see above) and provides an easy way to add, remove, validate, etc.
+    """
     def __init__(self, testing = False):
         self.st = Storage(testing = testing)
         self.servers = self.get()
@@ -29,8 +33,10 @@ class ServerList(object):
         return servers
 
     def add(self, server):
-        if type(server) is not _Server:
-            raise ValueError("_Server object needs to be given to ServerList.add() You gave me: " + type(server))
+        if type(server) is dict:
+            server = _Server(server)
+        assert type(server) is _Server
+        self.validate(server)
         self.servers.append(server)
 
     def remove(self, name):
@@ -43,6 +49,7 @@ class ServerList(object):
                 del self.servers[i]
                 return True
         raise ValueError('Server not found: ' + name)
+        self.save()
 
     def save(self):
         self.st.write(self.servers)
@@ -55,6 +62,20 @@ class ServerList(object):
             table_data.append([server.name, server.username + "@" + server.ip, server.location])
         return AsciiTable(table_data)
 
+    # Validation Methods
+    def validate(self, server):
+        """
+        This just runs all the other validation methods, so you just call server_list.validate(server)
+        Raises an exception if anything goes wrong.
+        """
+        self.validate_type(server)
+        self.validate_name(server.name)
+        self.validate_username(server.username)
+        self.validate_ip(server.ip)
+
+    def validate_type(self, server):
+        if type(server) is not _Server:
+            raise ValueError("_Server object needs to be given to ServerList.add() You gave me: " + type(server))
 
     def validate_name(self, name):
         assert type(name) is str
@@ -66,8 +87,7 @@ class ServerList(object):
         pattern = r'^[a-z][-a-z0-9_]*'
         leftovers = re.sub(pattern, '', username)
         if leftovers:
-            raise ValueError(
-                "Found character not allowed in usernames: " + leftovers[0])
+            raise ValueError("Found character not allowed in usernames: " + leftovers[0])
 
     def validate_ip(self, ip):
         """
@@ -76,5 +96,4 @@ class ServerList(object):
         or https://us-west-2.console.aws.amazon.com/elasticbeanstalk/home?region=us-west-2#/environment/dashboard?applicationName=somethinghere&environmentId=e-234h8df
         """
         if not ip:
-            raise ValueError(
-                "Please provide an actual IP or web address. You gave me: " + ip)
+            raise ValueError("Please provide an actual IP or web address. You gave me: " + ip)

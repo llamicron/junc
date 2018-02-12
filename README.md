@@ -23,3 +23,8 @@ $ junc connect <server_name>
 
 ## [Documentation](docs/index.md)
 [See the full docs here](docs/index.md)
+
+## Contributing
+This may appear to be a small project, but I'm using all the building and test tools under the sun. It may seem like overkill, but this is mainly for me to learn how to use all these tools like Travis CI, AppVeyor, Tox, etc..
+
+Fork this repo and add a new feature, write some unit tests and a bit of documentation and it'll probably get merged.

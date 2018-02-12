@@ -6,7 +6,6 @@ class Storage(object):
     """
     Handles storing and retrieving of server data
     """
-
     def __init__(self, testing = False):
         self.file_path = os.path.join(os.path.expanduser("~"), ".junc.json")
         if testing:

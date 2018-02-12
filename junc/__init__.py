@@ -1,11 +1,11 @@
 """
 Usage:
-    junc list [--json]
-    junc connect <name>
-    junc add <name> <username> <ip> [<location>]
-    junc remove <name>
-    junc backup [<file>]
-    junc restore [<file>]
+    junc list [--json] [--debug]
+    junc connect <name> [--debug]
+    junc add <name> <username> <ip> [<location>] [--debug]
+    junc remove <name> [--debug]
+    junc backup [<file>] [--debug]
+    junc restore [<file>] [--debug]
 
 Options:
     -h --help     Show this screen.
@@ -25,6 +25,7 @@ Notes:
 """
 
 import os
+import sys
 import json
 
 from docopt import docopt
@@ -48,7 +49,7 @@ def confirm(message="Sure? "): # pragma: no cover
             print("Valid choices are y or n")
 
 class Junc(object):
-    def __init__(self, testing=False):
+    def __init__(self, testing = False):
         self.st = Storage(testing = testing)
         self.sl = ServerList(testing = testing)
 
@@ -66,14 +67,14 @@ class Junc(object):
                 return self.sl.table()
 
         if args['add']:
-            self.sl.add(_Server({
+            self.sl.add({
                 'name': args['<name>'],
                 'ip': args['<ip>'],
                 'username': args['<username>'],
                 'location': args['<location>']
-            }))
+            })
             self.sl.save()
-            return server.name + ' added'
+            return args['<name>'] + ' added'
 
         if args['remove']:
             self.sl.remove(args['<name>'])
@@ -103,7 +104,7 @@ class Junc(object):
 
 def main():
     args = docopt(__doc__)
-    junc = Junc()
+    junc = Junc(testing = args['--debug'])
     results = junc.what_to_do_with(args)
     if type(results) is AsciiTable:
         print(results.table)
