@@ -50,6 +50,9 @@ def confirm(message="Sure? "): # pragma: no cover
             print("Valid choices are y or n")
 
 class Junc(object):
+    """
+    Handles the docopt args and connects to servers
+    """
     def __init__(self, testing = False):
         self.st = Storage(testing = testing)
         self.sl = ServerList(testing = testing)

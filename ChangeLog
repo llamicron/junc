@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+2.1.2
+-----
+
+* Adds a test and fixes a bug where you can't remove a server
+
 2.1.1
 -----
 
