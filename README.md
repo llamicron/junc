@@ -17,7 +17,7 @@ $ junc add
 # See the server table
 $ junc list
 
-# Connect to a server
+# Connect to a server (SSH Login)
 $ junc connect <server_name>
 ```
 
