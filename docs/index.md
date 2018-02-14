@@ -19,6 +19,8 @@
   * [Restore](#restore)
 * [Tips](#tips)
   * [Export](#export)
+  * [Debugging](#debugging)
+* [Footnotes](#footnotes)
 
 # Installation [↑](#table-of-contents)
 Install with pip
@@ -127,3 +129,14 @@ You can backup your servers (maybe with a periodic cron job?) with the date in t
 ```sh
 junc list --json | gist -f junc_backup_02_04_2018.json
 ```
+## Debugging [↑](#table-of-contents)
+If things aren't working properly, hit me up. Otherwise, if you want to try and fix it on your own, try adding the `--debug` flag. This will do a number of things:
+
+1. Actually throw an exception in python when one occurs
+2. Use a test file (`~/.junc.json.test`) instead of your actual file.
+
+Currently, when the `--debug` flag is missing, if a python exception occurs [[1]](#1), junc will catch the error and only print the attached message instead of the full error message. This is just to make things a little more user friendly. It also completely prevents users from getting an ugly error message. Adding the `--debug` flag reverses this behavior.
+
+# Footnotes [↑](#table-of-contents)
+### 1 [↑](#table-of-contents)
+This is expected during normal usage. For example, if you try to add a server with a name that's already taken, junc with raise a `ValidationError`.
