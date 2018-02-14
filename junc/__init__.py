@@ -73,7 +73,7 @@ class Junc(object):
                 'location': args['<location>']
             })
             self.sl.save()
-            return args['<name>'] + ' added'
+            return self.sl.as_table()
 
         if args['remove']:
             self.sl.remove(args['<name>'])

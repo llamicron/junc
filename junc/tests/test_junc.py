@@ -63,7 +63,7 @@ class TestJunc(unittest.TestCase):
         args = docopt(doc, ['add', 'server_name', 'username', '123.456', 'Pytest :)'])
         results = self.junc.what_to_do_with(args)
 
-        assert results == 'server_name added'
+        assert type(results) is AsciiTable
         assert len(self.junc.sl.servers) == old_size + 1
 
         with self.assertRaises(ValidationError):
