@@ -32,6 +32,9 @@ import json
 from docopt import docopt
 from terminaltables import AsciiTable
 
+# I hate these lines
+# One is for pytest, one if for python
+# idk why i have to do this
 try:
     from storage import Storage
     from server import ServerList
