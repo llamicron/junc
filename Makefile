@@ -5,7 +5,7 @@ clean:
 build:
 	python setup.py sdist
 
-install: build
+install: clean build
 	pip install dist/*
 
 uninstall:

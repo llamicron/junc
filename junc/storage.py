@@ -2,10 +2,7 @@ import json
 from shutil import copy2
 import os
 
-from coolered import color
-from terminaltables import AsciiTable
-
-class Storage():
+class Storage(object):
     """
     Handles storing and retrieving of server data
     """
@@ -21,22 +18,29 @@ class Storage():
         """
         try:
             open(file_path, 'a')
-        except PermissionError:
+        except IOError:
             print("Error: Permission denied. Change permissions on " + file_path)
             raise
         return True
 
     def write(self, server_list):
         """
-        Writes a whole server list to the storage file
+        Takes a list of Server object and writes it to `self.file_path`
         """
-        with open(self.file_path, 'w') as f:
-            json.dump(server_list, f, indent=4)
+        with open(self.file_path, 'w') as fi:
+            json_data = []
+            for server in server_list:
+                json_data.append(server.__dict__)
+            json.dump(json_data, fi, indent=4)
 
     def get_servers(self):
+        """
+        Gets json server data form `self.file_path`.
+        Does NOT return Server objects
+        """
         try:
             return json.loads(open(self.file_path, 'r').read())
-        except json.decoder.JSONDecodeError:
+        except ValueError:
             return []
 
     def backup(self, location=None, reverse=False):
@@ -49,11 +53,11 @@ class Storage():
         if reverse:
             print('Restoring to', self.file_path)
             copy2(location, self.file_path)
-            color('green', 'Done')
+            print('Done')
         else:
             print('Backing up to', location)
             copy2(self.file_path, location)
-            color('green', 'Done')
+            print('Done')
 
     def restore(self, location=None):
         """

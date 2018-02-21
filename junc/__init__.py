@@ -1,11 +1,11 @@
 """
 Usage:
-    junc list [--json]
-    junc connect <name>
-    junc add <name> <username> <ip> [<location>]
-    junc remove <name>
-    junc backup [<file>]
-    junc restore [<file>]
+    junc list [--json] [--debug]
+    junc connect <name> [--debug]
+    junc add <name> <username> <ip> [<location>] [--debug]
+    junc remove <name> [--debug]
+    junc backup [<file>] [--debug]
+    junc restore [<file>] [--debug]
 
 Options:
     -h --help     Show this screen.
@@ -22,6 +22,8 @@ Arguments:
 Notes:
     Data is stored in ~/.junc.json
     Default backup location is ~/.junc.json.bak
+
+    You need to have 'ssh' installed on your system.
 """
 
 import os
@@ -30,12 +32,17 @@ import json
 from docopt import docopt
 from terminaltables import AsciiTable
 
+# I hate these lines
+# One is for pytest, one if for python
+# idk why i have to do this
 try:
     from storage import Storage
+    from server import ServerList
 except ImportError:
     from .storage import Storage
+    from .server import ServerList
 
-def confirm(message):
+def confirm(message="Sure? "): # pragma: no cover
     while True:
         choice = input(message + ' [y/n]: ')
         if choice.upper() == 'Y':
@@ -46,50 +53,34 @@ def confirm(message):
             print("Valid choices are y or n")
 
 class Junc(object):
-    def __init__(self, testing=False):
-        self.st = Storage(testing=testing)
-
-        self.servers = self.st.get_servers()
-
-    def save(self):
-        self.st.write(self.servers)
-
-    def find_similar_server(self, args):
-        """
-        Returns a list of similarities between input and servers, so there won't be any duplicate servers
-        """
-        similarities = []
-        for server in self.servers:
-            if server['name'] == args['<name>']:
-                similarities.append('name')
-            if server['username'] == args['<username>'] and server['ip'] == args['<ip>']:
-                similarities.append('address')
-        return similarities
+    """
+    Handles the docopt args and connects to servers
+    """
+    def __init__(self, testing = False):
+        self.st = Storage(testing = testing)
+        self.sl = ServerList(testing = testing)
 
     def what_to_do_with(self, args):
         """
-        Inteprets the docopt argument vector and does something cool with it
+        Inteprets the docopt argument vector and does something cool with it.
+        Returns what will be printed to the console after the command is run.
         """
         if args['list']:
-            return self.list_servers(raw=args['--json'])
+            return self.sl.as_json() if args['--json'] else self.sl.as_table()
 
         if args['add']:
-            similarities = self.find_similar_servers(args)
-            if 'name' in similarities:
-                return "There's already a server with that name, try another"
-            if 'address' in similarities:
-                if not confirm("A server exists with the same address. Add this one too?"):
-                    return 'Server not added'
-
-            server = self.new_server(args)
-            self.servers.append(server)
-            self.save()
-            return server['name'] + ' added'
+            self.sl.add({
+                'name': args['<name>'],
+                'ip': args['<ip>'],
+                'username': args['<username>'],
+                'location': args['<location>']
+            })
+            self.sl.save()
+            return self.sl.as_table()
 
         if args['remove']:
-            if self.remove(args['<name>']):
-                return args['<name>'] + ' removed'
-            return ''
+            self.sl.remove(args['<name>'])
+            return args['<name>'] + ' removed'
 
         if args['connect']:
             self.connect(args['<name>'])
@@ -102,61 +93,33 @@ class Junc(object):
             self.st.restore(args['<file>'])
             return ''
 
-    def remove(self, name):
-        for i in range(len(self.servers)):
-            if self.servers[i]['name'] == name:
-                del self.servers[i]
-                self.save()
-                return True
-            if i == len(self.servers) - 1:
-                print("Couldn't find that server...")
-                return False
-
-    def list_servers(self, raw=False):
-        if raw:
-            return json.dumps(self.servers)
-        else:
-            return self.get_server_table()
-
-    def new_server(self, args):
-        # Don't have to validate, docopt does that for us
-        attrs = ['<ip>', '<username>', '<name>', '<location>']
-        new_server = {}
-        for attr in attrs:
-            new_server[attr[1:-1]] = args[attr]
-        return new_server
-
-    def get_server_table(self):
-        """
-        Gets all the servers and plops them into a terminal table
-        """
-        table_data = [
-            ['Name', "Address", "Location"],
-        ]
-        if not self.servers:
-            table_data.append(["No Servers yet :(\nAdd some!"])
-        else:
-            for server in self.servers:
-                table_data.append(
-                    [server['name'], server['username'] + "@" + server['ip'], server['location']])
-        return AsciiTable(table_data)
-
     def connect(self, name):
         connection = ''
-        for server in self.servers:
-            if server['name'] == name:
-                connection = server['username'] + '@' + server['ip']
+        for server in self.sl.servers:
+            if server.name == name:
+                connection = server.address()
         if not connection:
             return "Couldn't find that server..."
         print('Connecting...')
         os.system('ssh ' + connection)
         return 'Done'
 
-if __name__ == '__main__':
+def main():
     args = docopt(__doc__)
-    junc = Junc()
-    results = junc.what_to_do_with(args)
-    if type(results) is AsciiTable:
-        print(results.table)
-    else:
-        print(results)
+    junc = Junc(testing = args['--debug'])
+    try:
+        results = junc.what_to_do_with(args)
+        if type(results) is AsciiTable:
+            print(results.table)
+        else:
+            print(results)
+    except Exception as mess: # This makes me cringe
+        # Unless we're debugging...
+        if args['--debug']:
+            raise
+        # Print the message of the exception, not the full error
+        # More user friendly
+        print(mess)
+
+if __name__ == '__main__':
+    main()

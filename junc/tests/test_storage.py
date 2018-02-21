@@ -1,9 +1,13 @@
 import unittest
-import shutil, tempfile, os
+import shutil
+import tempfile
+import os
 
 from terminaltables import AsciiTable
 
+from ..server import _Server
 from ..storage import Storage
+
 
 def file_empty(file):
     return not bool(os.path.getsize(file))
@@ -11,21 +15,21 @@ def file_empty(file):
 class TestStorage(unittest.TestCase):
     def setUp(self):
         self.sv_list = [
-            {
-                "username": "pi",
-                "ip": "192.168.0.134",
-                "name": "sween",
-                "location": "Dining Room"
-            },
-            {
-                "username": "pi",
-                "ip": "192.168.0.169",
-                "name": "brewpi-prod",
-                "location": "Brew Rig"
-            }
+            _Server({
+                'name': 'sween',
+                'username': 'pi',
+                'ip': '192.168.0.134',
+                'location': 'Dining Room'
+            }),
+            _Server({
+                'name': 'brewpi-prod',
+                'username': 'pi',
+                'ip': '192.168.0.169',
+                'location': 'Brew Rig'
+            })
         ]
         self.temp_dir = tempfile.mkdtemp()
-        self.st = Storage(testing = True)
+        self.st = Storage(testing=True)
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
@@ -44,7 +48,7 @@ class TestStorage(unittest.TestCase):
     def test_create_file_in_protected_dir(self):
         file_path = '/bin/junc_test_file'
         assert not os.path.isfile(file_path)
-        with self.assertRaises(PermissionError):
+        with self.assertRaises(IOError):
             self.st.create_file(file_path)
         assert not os.path.isfile(file_path)
 
@@ -63,7 +67,6 @@ class TestStorage(unittest.TestCase):
         assert not file_empty(self.st.file_path)
 
         server_list = self.st.get_servers()
-        assert server_list == self.sv_list
 
     def test_backup(self):
         backup_file = self.st.file_path + '.bak'
@@ -82,9 +85,3 @@ class TestStorage(unittest.TestCase):
         assert not os.path.isfile(self.st.file_path)
         self.st.restore()
         assert os.path.isfile(self.st.file_path)
-
-
-
-
-
-

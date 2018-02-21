@@ -1,7 +1,13 @@
 # Junc Documentation
 
+## Index
+* [Quickstart and Usage Overview](#table-of-contents)
+* [Code Overview](code.md)
+* [Roadmap](https://github.com/llamicron/junc/projects)
+* [Contributing](contributing.md)
+* [License](license.md)
 
-## index
+## Table Of Contents
 * [Installation](#installation)
 * [Quickstart](#quickstart)
 * [Things you can do](#things-you-can-do)
@@ -13,8 +19,10 @@
   * [Restore](#restore)
 * [Tips](#tips)
   * [Export](#export)
+  * [Debugging](#debugging)
+* [Footnotes](#footnotes)
 
-# Installation
+# Installation [↑](#table-of-contents)
 Install with pip
 ```sh
 pip install junc
@@ -27,7 +35,7 @@ $ pip install -r requirements.txt
 $ make install
 ```
 
-# Quickstart
+# Quickstart [↑](#table-of-contents)
 ```sh
 # Add a server
 $ junc add
@@ -39,23 +47,27 @@ $ junc list
 # Connect to a server
 $ junc connect <server_name>
 ```
+To see the version:
+```sh
+pip list | grep junc
+```
 
-# Things you can do
+# Things you can do [↑](#table-of-contents)
 
-## Connect
+## Connect [↑](#table-of-contents)
 ```
 $ junc connect <name>
 Connecting...
 ```
 
-## Add
+## Add [↑](#table-of-contents)
 Add a server to your server list:
 ```
 $ junc add <server_name> <username> <ip> [<location>]
 ```
 `location` is optional
 
-## List
+## List [↑](#table-of-contents)
 ```
 $ junc list
 +-------------+-------------------------+-------------+
@@ -73,14 +85,14 @@ image for if the table above doesn't render correctly.
 
 `--json` is an optional flag for `list`. It will output the server list as json.
 
-## Remove
+## Remove [↑](#table-of-contents)
 Remove a server:
 ```
 junc remove <name>
 ```
 If there are special characters in the server name that could be interpreted as a unix command ('`[`' for example), you may need to escape it with a backslash `\`.
 
-## Backup
+## Backup [↑](#table-of-contents)
 This will copy the server list json file to a backup file.
 ```sh
 junc backup [<file>]
@@ -89,7 +101,7 @@ You can supply an optional file path to copy to
 
 If you want to backup on gist or export to a service like [hastebin](http://hastebin.com), see the [export tips](#export) section.
 
-## Restore
+## Restore [↑](#table-of-contents)
 Copies the backup file to the regular server list json file.
 ```
 junc restore [<file>]
@@ -97,16 +109,16 @@ junc restore [<file>]
 The optional file argument is where to copy the file from.
 
 
-# Tips
+# Tips [↑](#table-of-contents)
 ## Export
-### To Hastebin
+### To Hastebin [↑](#table-of-contents)
 If you have the `haste` gem installed (`gem install haste`):
 ```sh
 junc list --json | haste
 ```
 Keep in mind that haste only keeps docs for 30 days since their last view, and they may be removed without notice. This is useful for moving lists between systems or sharing with other developers, but not backups since it will be removed one day.
 
-### To Gist
+### To Gist [↑](#table-of-contents)
 You'll need the [gist](https://github.com/defunkt/gist) gem or package installed and configured, which requires you to login to your github account. Install the gem with `gem install gist` or on MacOS with `brew install gist`
 ```sh
 junc list --json | gist -f junc_export.json
@@ -117,3 +129,14 @@ You can backup your servers (maybe with a periodic cron job?) with the date in t
 ```sh
 junc list --json | gist -f junc_backup_02_04_2018.json
 ```
+## Debugging [↑](#table-of-contents)
+If things aren't working properly, hit me up. Otherwise, if you want to try and fix it on your own, try adding the `--debug` flag. This will do a number of things:
+
+1. Actually throw an exception in python when one occurs
+2. Use a test file (`~/.junc.json.test`) instead of your actual file.
+
+Currently, when the `--debug` flag is missing, if a python exception occurs [[1]](#1), junc will catch the error and only print the attached message instead of the full error message. This is just to make things a little more user friendly. It also completely prevents users from getting an ugly error message. Adding the `--debug` flag reverses this behavior.
+
+# Footnotes [↑](#table-of-contents)
+### 1 [↑](#table-of-contents)
+This is expected during normal usage. For example, if you try to add a server with a name that's already taken, junc with raise a `ValidationError`.

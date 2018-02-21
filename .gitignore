@@ -47,11 +47,12 @@ htmlcov/
 .tox/
 .coverage
 .coverage.*
-.cache
+.cache/
 nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.pytest_cache
 
 
 # Translations
